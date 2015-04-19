@@ -1,0 +1,20 @@
+<project name="Taco Eating Jose" default="compile" basedir=".">
+    <description>
+        TODO: Description of the project.
+    </description>
+
+    <target name="clean">
+        <delete dir="build" />
+    </target>
+
+    <target name="compile">
+        <mkdir dir="build/Jose" />
+        <javac srcdir="src" destdir="build" classpath="lib/slick.jar:lib/lwjgl.jar:src" fork="true" />
+    </target>
+
+    <target name="run">
+        <java classname="Jose.src.JoseMain" classpath="lib/slick.jar:lib/lwjgl.jar:build" fork="true">
+            <sysproperty key="java.library.path" path="natives" />
+        </java>
+    </target>
+</project>

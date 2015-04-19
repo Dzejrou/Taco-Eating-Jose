@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="150" height="10" tilewidth="70" tileheight="70" nextobjectid="1">
+ <tileset firstgid="1" name="tiles_spritesheet" tilewidth="70" tileheight="70" spacing="2">
+  <image source="../sprites/tiles_spritesheet.png" width="914" height="936"/>
+  <tile id="9">
+   <properties>
+    <property name="solid" value="true"/>
+   </properties>
+  </tile>
+  <tile id="102">
+   <properties>
+    <property name="lethal" value="true"/>
+   </properties>
+  </tile>
+  <tile id="103">
+   <properties>
+    <property name="solid" value="true"/>
+   </properties>
+  </tile>
+  <tile id="104">
+   <properties>
+    <property name="solid" value="true"/>
+   </properties>
+  </tile>
+  <tile id="128">
+   <properties>
+    <property name="solid" value="true"/>
+   </properties>
+  </tile>
+  <tile id="138">
+   <properties>
+    <property name="lethal" value="true"/>
+   </properties>
+  </tile>
+ </tileset>
+ <tileset firstgid="157" name="p1_spritesheet" tilewidth="70" tileheight="90" spacing="2">
+  <image source="../sprites/p1_spritesheet.png" width="508" height="288"/>
+ </tileset>
+ <layer name="Tile Layer 1" width="150" height="10">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAA+3OQQoAEBBAUbfFMdyctUg2KO/V300zEwIAAADAOaWVWvn2I8DX0qI4aDaz2rXT6G4f76qTI/82cBcAAA==
+  </data>
+ </layer>
+</map>
