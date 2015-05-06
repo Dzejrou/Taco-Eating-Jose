@@ -22,7 +22,17 @@
     <property name="solid" value="true"/>
    </properties>
   </tile>
+  <tile id="114">
+   <properties>
+    <property name="solid" value="true"/>
+   </properties>
+  </tile>
   <tile id="128">
+   <properties>
+    <property name="solid" value="true"/>
+   </properties>
+  </tile>
+  <tile id="132">
    <properties>
     <property name="solid" value="true"/>
    </properties>
@@ -32,13 +42,18 @@
     <property name="lethal" value="true"/>
    </properties>
   </tile>
+  <tile id="152">
+   <properties>
+    <property name="solid" value="true"/>
+   </properties>
+  </tile>
  </tileset>
  <tileset firstgid="157" name="p1_spritesheet" tilewidth="70" tileheight="90" spacing="2">
   <image source="../sprites/p1_spritesheet.png" width="508" height="288"/>
  </tileset>
  <layer name="Tile Layer 1" width="150" height="10">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAA+3OQQoAEBBAUbfFMdyctUg2KO/V300zEwIAAADAOaWVWvn2I8DX0qI4aDaz2rXT6G4f76qTI/82cBcAAA==
+   H4sIAAAAAAAAA+3WQQqAIBSE4UeH6WrVMVp4iG7bIoJZjEQZZPp/MCAiz82ARgAAAKB3swlQajPBf4yyHjL7X6BXbVjjeGuWF2alh3dr6BVUkpSgV/Vzf2DNZJI7czXrTty9Z+hV/XZobHD4cBcAAA==
   </data>
  </layer>
 </map>

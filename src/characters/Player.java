@@ -13,23 +13,28 @@ import Jose.src.View;
 
 public class Player extends Character
 {
-    private enum STATE { MOVING_LEFT, MOVING_RIGHT,
-                         JUMPING_RIGHT, JUMPING_LEFT, HIT, STANDING, FALLING }
+    private enum STATE { MOVING, JUMPING, HIT, STANDING, FALLING }
+    private enum DIRECTION { RIGHT, LEFT, NONE }
     private STATE curr_state;
+    private STATE curr_dir;
     private Animation anim_left, anim_right, anim_jump_right,
             anim_jump_left, anim_stand, anim_hit;
     private Image[] im_left, im_right, im_jump_right, im_jump_left,
             im_stand, im_hit;
     private Input input;
-    private float speed, jump_distance;
+    private float speed_x, speed_y, jump_distance, jump_diff;
     private View view;
+
+    private final float max_jump_height = 5.f;
 
     public Player(TiledMap m, float pos_x, float pos_y, Input i, View v)
     {
         super(m, pos_x, pos_y);
         input = i;
         view = v;
-        speed = 0.3f;
+        jump_diff = 0.1f;
+        speed_x = 0.3f;
+        speed_y = 0.4f;
         curr_state = STATE.STANDING;
 
         try
@@ -46,6 +51,7 @@ public class Player extends Character
             System.out.println(ex.getMessage());
         }
 
+        // Set the animations.
         int[] durations = {100, 100};
         anim_right = new Animation(im_right, durations, false); // false == do not auto update
         anim_left = new Animation(im_left, durations, false);
@@ -69,6 +75,10 @@ public class Player extends Character
 
     public void update(long delta)
     {
+        update_state();
+
+
+
         // FALLING state has it's own movement and state because of the sprite drawn while falling from a jump.
         if(curr_state != STATE.JUMPING_RIGHT &&
            curr_state != STATE.JUMPING_LEFT &&
@@ -234,15 +244,105 @@ public class Player extends Character
         curr_anim.update(delta);
     }
     
+    /**
+     *
+     */
+    private void update_state()
+    {
+        if(curr_state != STATE.FALLING && !on_solid_ground)
+            curr_state = STATE.FALLING;
+
+        switch(curr_state)
+        {
+            case STANDING:
+                if(input.isKeyDown(input.KEY_A))
+                {
+                    curr_state = STATE.MOVING;
+                    curr_dir = DIRECTION.LEFT;
+                }
+                else if(input.isKeyDown(input.KEY_D))
+                {
+                    curr_state = STATE.MOVING;
+                    curr_dir = DIRECTION.RIGHT;
+                }
+                else if(input.isKeyDown(input.KEY_SPACE))
+                    curr_state = STATE.JUMPING;
+                break;
+            case MOVING:
+                // Change the direction if necessary.
+                if(curr_dir != DIRECTION.LEFT && input.isKeyDown(input.KEY_A))
+                    curr_dir = DIRECTION.LEFT;
+                else if(curr_dir != DIRECTION.RIGHT &&
+                        input.isKeyDown(input.KEY_D))
+                    curr_dir = DIRECTION.RIGHT;
+
+                // Stopped moving.
+                if(curr_dir == DIRECTION.LEFT && !input.isKeyDown(input.KEY_A)
+                || curr_dir == DIRECTION.RIGHT /* Direction must match. */
+                && !input.isKeyDown(input.KEY_D))
+                    curr_state = STATE.STANDING;
+
+                // Preserve the direction.
+                if(input.isKeyDown(input.KEY_SPACE))
+                    curr_state = STATE.JUMPING;
+                break;
+
+            case JUMPING:
+                jump_distance += jump_diff;
+                if(jump_distance > max_jump_height)
+                    curr_state = STATE.FALLING;
+                break;
+            case FALLING:
+                break;
+        }
+    }
+
+    private void update_movement(long delta)
+    {
+        switch(curr_state)
+        {
+            case FALLING:
+                y -= speed_y * delta;
+                break;
+            case MOVING:
+                // Modifies the direction of movement.
+                float modifier;
+                if(curr_dir == DIREACTION.LEFT)
+                    modifier = 1.f;
+                else
+                    modifier = -1.f;
+
+                x += speed_x * delta * modifier;
+                break;
+            case JUMPING:
+                break;
+            case STANDING:
+                // TODO: Moving platforms?
+                break;
+        }
+    }
+
+    /**
+     * Method that is used to draw the player's current
+     * animation and all other necessary sprites and/or
+     * text.
+     * @param g The game's graphics context.
+     */
     public void draw(Graphics g)
     {
+        // Drawing the debug text.
         g.drawString("Player: [" + x + ", " + y + "]", 10, 30);
         g.drawString("View: [" + view.x + ", " + view.y + " | " + view.width + ", " + view.height + "]",10,50);
 
+        // Drawing the debug bounds.
         Rectangle tmp_bounds = get_bounds();
         tmp_bounds.setX(tmp_bounds.getX() - view.x);
         tmp_bounds.setY(tmp_bounds.getY() - view.y);
         g.draw(tmp_bounds);
+
+        // RIP 6 hours of my life.
+        //curr_anim.draw(x + view.x, y - view.y);
+
         curr_anim.draw(x - view.x, y - view.y);
     }
 }

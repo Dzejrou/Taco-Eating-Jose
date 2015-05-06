@@ -3,6 +3,7 @@ package Jose.src.characters;
 import org.newdawn.slick.tiled.TiledMap;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.Animation;
+import org.newdawn.slick.Graphics;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -51,7 +52,6 @@ public abstract class Character
         int tile_width = m.getTileWidth();
         int tile_height = m.getTileHeight();
         for(int i = 0; i < m.getWidth(); ++i)
-        {
             for(int j = 0; j < m.getHeight(); ++j)
             {
                 if("true".equals(m.getTileProperty(m.getTileId(i, j, 0), "solid", "false")))
@@ -59,8 +59,11 @@ public abstract class Character
                     solid_tiles.add(new Rectangle(i * tile_width, j * tile_height, tile_width, tile_height));
                 }
             }
-        }
     }
+
+    public abstract void update(long delta);
+
+    public abstract void draw(Graphics g);
 
     /**
      * Returns the bounding rectangle of this character, used for
@@ -105,5 +108,13 @@ public abstract class Character
                 return true;
         }
         return false;
+    }
+
+    /**
+     *
+     */
+    public boolean on_solid_ground()
+    {
+        return is_solid(x, y + .1f);
     }
 }
