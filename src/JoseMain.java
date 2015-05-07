@@ -42,25 +42,18 @@ public class JoseMain extends BasicGame
     {
         map = new TiledMap("resources/maps/map00.tmx");
         view = new View(map, 0, 0, 800, 700);
-        plr = new Player(map, 30, 30, cont.getInput(), view);
+        plr = new Player(map, 50, 400, cont.getInput(), view);
     }
 
     @Override
     public void update(GameContainer cont, int i) throws SlickException
     {
-        plr.update(10);
+        plr.update(i);
     }
 
     @Override
     public void render(GameContainer cont, Graphics graph) throws SlickException
     {
-        /*
-        int start_x = (int)((view.x + view.width / 2) / map.getTileWidth()); // Starting tile.
-        int start_y = (int)(view.y / map.getTileHeight());
-
-        // Size of the view in tiles.
-        int tiles_width = (int)(view.width / map.getTileWidth());
-        int tiles_height = (int)(view.height / map.getTileHeight()); */
         int tile_offset_x = (int) - (view.x % map.getTileWidth());
         int tile_offset_y = (int) - (view.y % map.getTileHeight());
 

@@ -26,6 +26,12 @@ public abstract class Character
     protected float width, height;
 
     /**
+     * Offset for the bounding box, since it does not always have to be located
+     * in the top left corner of the sprite.
+     */
+    protected float offset_x, offset_y;
+
+    /**
      * Special instance of animation all characters need to have, used
      * for rendering and collision detection.
      */
@@ -37,6 +43,11 @@ public abstract class Character
     protected List<Rectangle> solid_tiles;
 
     /**
+     * Reference to the current level's map.
+     */
+    protected TiledMap map;
+
+    /**
      * Constructor that spawns a new character on a given coordinates and
      * "binds" them to a level map (collision checking etc).
      * @param m Reference to the map of the current level.
@@ -45,6 +56,7 @@ public abstract class Character
      */
     public Character(TiledMap m, float pos_x, float pos_y)
     {
+        map = m;
         x   = pos_x;
         y   = pos_y;
 
@@ -73,7 +85,7 @@ public abstract class Character
      */
     protected Rectangle get_bounds()
     {
-        return new Rectangle(x, y, width, height);
+        return new Rectangle(x + offset_x, y + offset_y, width, height);
     }
 
     /**
@@ -96,16 +108,22 @@ public abstract class Character
      */
     protected boolean is_solid(float x, float y)
     {
-        // Width and height are set from the current animation frame via
-        // the get_bounds() method.
+        // Level bounds.
+        if(x < 0 - width || x > map.getWidth() * map.getTileWidth()
+        || y < 0)
+            return true;
+
+        // Get the bounds of the character.
         Rectangle tmp = get_bounds();
-        tmp.setX(x);
-        tmp.setY(y);
+        tmp.setX(x + offset_x); // Offset to the center from the coordinate.
+        tmp.setY(y + offset_y);
 
         for(Rectangle bounds : solid_tiles)
         {
             if(bounds.intersects(tmp))
+            {
                 return true;
+            }
         }
         return false;
     }
@@ -116,5 +134,13 @@ public abstract class Character
     public boolean on_solid_ground()
     {
         return is_solid(x, y + .1f);
+    }
+
+    /**
+     *
+     */
+    public boolean can_move_to(float x, float y)
+    {
+        return !is_solid(x, y);
     }
 }

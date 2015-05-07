@@ -48,12 +48,9 @@
    </properties>
   </tile>
  </tileset>
- <tileset firstgid="157" name="p1_spritesheet" tilewidth="70" tileheight="90" spacing="2">
-  <image source="../sprites/p1_spritesheet.png" width="508" height="288"/>
- </tileset>
  <layer name="Tile Layer 1" width="150" height="10">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAA+3WQQqAIBSE4UeH6WrVMVp4iG7bIoJZjEQZZPp/MCAiz82ARgAAAKB3swlQajPBf4yyHjL7X6BXbVjjeGuWF2alh3dr6BVUkpSgV/Vzf2DNZJI7czXrTty9Z+hV/XZobHD4cBcAAA==
+   H4sIAAAAAAAAA+2XQQ6EIAxFyRzGxM3cYe4xe5ljzIIDzNLbzkYSUgu0WEsxvuQHYhBa/FYM7kabAHRFtPLySuuMgFVfeSf3nM7OK8a6Jn1O7C33WMeqrySxktcV/ZPDkq/O2vPeebXgEY2EJV9RaNnjEfKCrIhG4gekjca7WPLVlPQfmes9kPQVt+a11MgJtL19VYKSG2UMpV59t3k+hLE1uPUxrp3qrld8tM8Lmt9BqTOFhq+k/12fW/tyvPPVzFifi1RtwghuXw9SLYhyY0rzcIWtG4X5SnL+o6rFA31Vi/V9cC978Acx3Q5mcBcAAA==
   </data>
  </layer>
 </map>
