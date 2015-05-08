@@ -65,10 +65,9 @@ public abstract class Character
     protected View view;
 
     /**
-     * Reference to the main boolean object, true if the debug mode is on,
-     * false otherwise.
+     * Boolean value that indicates if the debug mode is on.
      */
-    protected Boolean debug;
+    protected static boolean debug;
 
     /**
      * Constructor that spawns a new character on a given coordinates and
@@ -77,13 +76,13 @@ public abstract class Character
      * @param pos_x Starting X axis coordinate.
      * @param pos_y Starting Y axis coordinate.
      */
-    public Character(TiledMap m, float pos_x, float pos_y, Boolean d)
+    public Character(TiledMap m, float pos_x, float pos_y, View v)
     {
         // Setup the common attributes.
         map = m;
         x   = pos_x;
         y   = pos_y;
-        debug = d;
+        view = v;
 
         // Generate the array holding all solid tiles.
         solid_tiles = new ArrayList<Rectangle>();
@@ -111,6 +110,16 @@ public abstract class Character
      * @param g Reference to the game's graphics context.
      */
     public abstract void draw(Graphics g);
+
+    /**
+     * Returns true if the character is dead, false otherwise.
+     */
+    public abstract boolean is_dead();
+
+    /**
+     * Kills the character.
+     */
+    public abstract void die();
 
     /**
      * Returns the bounding rectangle of this character, used for

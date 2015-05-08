@@ -11,10 +11,12 @@ import org.newdawn.slick.Input;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import Jose.src.util.View;
 import Jose.src.characters.Character;
 import Jose.src.characters.Player;
+import Jose.src.characters.Boo;
 
 /**
  * Main game class, updates and renders the game, selects levels.
@@ -37,17 +39,11 @@ public class JoseMain extends BasicGame
     private View view;
 
     /**
-     * Boolean indicating if the game is in debug mode.
-     */
-    private Boolean debug;
-
-    /**
      * Constructor, sets all necessary attributes.
      */
     public JoseMain()
     {
         super("Taco Eating Jose");
-        debug = false;
 
         characters = new ArrayList<Character>();
     }
@@ -94,6 +90,15 @@ public class JoseMain extends BasicGame
         // Update characters.
         for(Character c : characters)
             c.update(i);
+
+        // Check for dead characters.
+        Iterator<Character> it = characters.iterator();
+        while(it.hasNext())
+        {
+            Character c = it.next();
+            if(c.is_dead())
+                it.remove();
+        }
     }
 
     @Override
@@ -134,7 +139,10 @@ public class JoseMain extends BasicGame
                 // Testing area.
                 map = new TiledMap("resources/maps/map00.tmx");
                 view = new View(map, 0, 0, 800, 700);
-                characters.add(new Player(map, 100, 400, cont.getInput(), view, debug));
+                Player tmp = new Player(map, 100, 400, cont.getInput(), view);
+
+                characters.add(tmp);
+                characters.add(new Boo(map, 400, 100, view, tmp));
                 break;
             default:
                 System.out.println("[Error] Wrong level selected.");

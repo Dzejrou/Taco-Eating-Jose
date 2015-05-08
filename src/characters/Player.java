@@ -21,7 +21,7 @@ public class Player extends Character
     /**
      * Enum that denotes the player's states.
      */
-    private enum STATE { MOVING, JUMPING, DEBUG, STANDING, FALLING }
+    private enum STATE { MOVING, JUMPING, DEBUG, STANDING, FALLING, DEAD }
 
     /**
      * Holds a reference to the current state of the player.
@@ -82,18 +82,16 @@ public class Player extends Character
      * @param i Reference to the game's input context.
      * @param v Reference to the game's view.
      */
-    public Player(TiledMap m, float pos_x, float pos_y, Input i, View v, Boolean d)
+    public Player(TiledMap m, float pos_x, float pos_y, Input i, View v)
     {
         // Set all attributes and call Character's constructor.
-        super(m, pos_x, pos_y, d);
+        super(m, pos_x, pos_y, v);
         input = i;
-        view = v;
         jump_distance = 0.f;
         speed_x = 0.3f;
         speed_y = default_jump_speed;
         curr_state = STATE.STANDING;
         curr_dir = DIRECTION.NONE;
-        debug = false;
 
         // Load all images into animation arrays.
         try
@@ -160,10 +158,10 @@ public class Player extends Character
     {
         // Debug mode handling.
         if(input.isKeyDown(input.KEY_H))
-            debug = false;
+            Character.debug = false;
         else if(input.isKeyDown(input.KEY_G))
-            debug = true;
-        if(debug)
+            Character.debug = true;
+        if(Character.debug)
             handle_debug_input();
 
         // Update the logic of the player.
@@ -396,7 +394,7 @@ public class Player extends Character
         curr_anim.draw(x - view.x, y - view.y);
 
         /* DEBUG */
-        if(debug)
+        if(Character.debug)
             draw_debug_info(g);
     }
 
@@ -467,5 +465,57 @@ public class Player extends Character
             curr_state = STATE.DEBUG;
         if(input.isKeyDown(input.KEY_M))
             curr_state = STATE.STANDING;
+    }
+
+    /**
+     * Returns true if the player looks at a given point in the map,
+     * returns false otherwisei (horizontal check only).
+     *
+     * @param pos_x X axis coordinate of the target point.
+     */
+    public boolean looks_at(float pos_x)
+    {
+        // Boo will only attack if the player turns their back to them.
+        if(curr_dir == DIRECTION.NONE)
+            return true;
+
+        // Direction in which the point is located matches
+        // the direction the player faces => player looks there.
+        return pos_x > x && curr_dir == DIRECTION.RIGHT
+            || pos_x <= x && curr_dir == DIRECTION.LEFT;
+    }
+
+    /**
+     * Returns the player's X axis coordinate.
+     */
+    public float get_x()
+    {
+        return x;
+    }
+
+    /**
+     * Returns the player's Y axis coordinate.
+     */
+    public float get_y()
+    {
+        return y;
+    }
+
+    /**
+     * Returns true if the player is dead, false otherwise.
+     */
+    public boolean is_dead()
+    {
+        return curr_state == STATE.DEAD;
+    }
+
+    /**
+     * Kills the character.
+     */
+    public void die()
+    {
+        // Be like a god in the debug mode!
+        if(!Character.debug)
+            curr_state = STATE.DEAD;
     }
 }

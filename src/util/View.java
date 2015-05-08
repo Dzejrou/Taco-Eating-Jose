@@ -1,6 +1,7 @@
 package Jose.src.util;
 
 import org.newdawn.slick.tiled.TiledMap;
+import org.newdawn.slick.geom.Rectangle;
 
 /**
  * The view class represent's a camera following the player,
@@ -65,5 +66,15 @@ public class View
     {
         move_horizontally(pos_x);
         // Possible TODO: move_horizontally.
+    }
+
+    /**
+     * Returns true if the given hitbox is inside the view,
+     * false otherwise.
+     * @param other Hitbox to be checked (rectangle).
+     */
+    public boolean contains(Rectangle other)
+    {
+        return new Rectangle(x, y, width, height).intersects(other);
     }
 }
