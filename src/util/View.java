@@ -1,7 +1,13 @@
-package Jose.src;
+package Jose.src.util;
 
 import org.newdawn.slick.tiled.TiledMap;
 
+/**
+ * The view class represent's a camera following the player,
+ * allows camera movement and restriction for update of characters,
+ * since only those in the view need to be updated.
+ * @author Dzejrou
+ */
 public class View
 {
     /**
@@ -16,6 +22,15 @@ public class View
      */
     private float map_width, map_height;
 
+    /**
+     * View class constructor, sets all atributes and calculates the map
+     * size.
+     * @param map Reference to the level's tile map.
+     * @param x X axis coordinate of the view.
+     * @param y Y axis coordinate of the view.
+     * @param width Width of the view.
+     * @param height Height of the view.
+     */
     public View(TiledMap map, float x, float y, float width, float height)
     {
         this.x = x;
@@ -27,6 +42,10 @@ public class View
         map_height = map.getHeight() * map.getTileHeight();
     }
 
+    /**
+     * Moves the view horizontally to a given coordinate.
+     * @param pos_x X axis coordinate.
+     */
     public void move_horizontally(float pos_x)
     {
         if(pos_x + width / 2 + width > map_width )
@@ -37,20 +56,14 @@ public class View
             x = pos_x - width / 2; // Center the view around pos_x.    
     }
 
-    public void move_vertically(float offset)
-    { // TODO:
-        float tmp_y = y + offset;
-        if(tmp_y < 0 || tmp_y + height > map_height) // Do not move it past the edge.
-            return;
-
-        y = tmp_y;    
-    
-    }
-
+    /**
+     * Moves the view to a given coordinate.
+     * @param pos_x X axis coordinate.
+     * @param pos_y Y axis coordinate - NOT USED.
+     */
     public void move(float pos_x, float pos_y)
     {
-        // To move the view, move the map in the opposite direction.
         move_horizontally(pos_x);
-        //move_vertically(pos_y);
+        // Possible TODO: move_horizontally.
     }
 }

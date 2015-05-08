@@ -8,7 +8,7 @@ import org.newdawn.slick.Graphics;
 import java.util.List;
 import java.util.ArrayList;
 
-import Jose.src.View;
+import Jose.src.util.View;
 
 /**
  * Abstract class that is to be extended by all characters in the game.
@@ -50,19 +50,25 @@ public abstract class Character
     protected TiledMap map;
 
     /**
-     *
+     * Enum that denotes the three possible directions.
      */
     protected enum DIRECTION { RIGHT, LEFT, NONE }
 
     /**
-     *
+     * Current direction of the character.
      */
     protected DIRECTION curr_dir;
 
     /**
-     *
+     * Reference to the game's view object.
      */
     protected View view;
+
+    /**
+     * Reference to the main boolean object, true if the debug mode is on,
+     * false otherwise.
+     */
+    private Boolean debug;
 
     /**
      * Constructor that spawns a new character on a given coordinates and
@@ -71,18 +77,22 @@ public abstract class Character
      * @param pos_x Starting X axis coordinate.
      * @param pos_y Starting Y axis coordinate.
      */
-    public Character(TiledMap m, float pos_x, float pos_y)
+    public Character(TiledMap m, float pos_x, float pos_y, Boolean d)
     {
+        // Setup the common attributes.
         map = m;
         x   = pos_x;
         y   = pos_y;
+        debug = d;
 
+        // Generate the array holding all solid tiles.
         solid_tiles = new ArrayList<Rectangle>();
         int tile_width = m.getTileWidth();
         int tile_height = m.getTileHeight();
         for(int i = 0; i < m.getWidth(); ++i)
             for(int j = 0; j < m.getHeight(); ++j)
             {
+                // The "false" means default value if the "solid" attribute is not present.
                 if("true".equals(m.getTileProperty(m.getTileId(i, j, 1), "solid", "false")))
                 {
                     solid_tiles.add(new Rectangle(i * tile_width, j * tile_height, tile_width, tile_height));
@@ -90,8 +100,16 @@ public abstract class Character
             }
     }
 
+    /**
+     * Updates all logic (movement, collisions ...) of the character.
+     * @param delta Time elapsed from the last update call.
+     */
     public abstract void update(long delta);
 
+    /**
+     * Draws the character (and possible debug info).
+     * @param g Reference to the game's graphics context.
+     */
     public abstract void draw(Graphics g);
 
     /**
@@ -135,6 +153,7 @@ public abstract class Character
         tmp.setX(x + offset_x); // Offset to the center from the coordinate.
         tmp.setY(y + offset_y);
 
+        // Checks solid tile collisions.
         for(Rectangle bounds : solid_tiles)
         {
             if(bounds.intersects(tmp))
@@ -146,7 +165,8 @@ public abstract class Character
     }
 
     /**
-     *
+     * Returns the value of the method is_solid with y coordinate
+     * pushed slightly below the character, used for gravity.
      */
     public boolean on_solid_ground()
     {
@@ -154,7 +174,10 @@ public abstract class Character
     }
 
     /**
-     *
+     * Simple negation of the method is_solid, used for better code readability
+     * in some places in the code.
+     * @param x X axis coordinate.
+     * @param y Y axis coordinate.
      */
     public boolean can_move_to(float x, float y)
     {

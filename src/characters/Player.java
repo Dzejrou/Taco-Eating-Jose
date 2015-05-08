@@ -10,31 +10,82 @@ import org.newdawn.slick.Input;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.Color;
 
-import Jose.src.View;
+import Jose.src.util.View;
 
+/**
+ * Player specialization of the Character class.
+ * @author Dzejrou
+ */
 public class Player extends Character
 {
     /**
-     *
+     * Enum that denotes the player's states.
      */
     private enum STATE { MOVING, JUMPING, DEBUG, STANDING, FALLING }
 
+    /**
+     * Holds a reference to the current state of the player.
+     */
     private STATE curr_state;
+
+    /**
+     * Animations for the different states.
+     */
     private Animation anim_left, anim_right, anim_jump_right,
             anim_jump_left, anim_stand, anim_hit;
+
+    /**
+     * Image arrays used to create the animations.
+     */
     private Image[] im_left, im_right, im_jump_right, im_jump_left,
             im_stand, im_hit;
-    private Input input;
-    private float speed_x, speed_y, jump_distance;
-    private boolean debug;
 
+    /**
+     * Reference to the game's input context.
+     */
+    private Input input;
+
+    /**
+     * Horizontal and vertical speeds.
+     */
+    private float speed_x, speed_y;
+
+    /**
+     * Current distance passed of the jump, used to determine if the player
+     * should start falling.
+     */
+    private float jump_distance;
+
+    /**
+     * Maximum jump distance, after this is passed, start falling.
+     */
     private final float max_jump_height = 0.5f;
+
+    /**
+     * Default jumping speed, used to reset the speed, which is decreased
+     * periodically while jumping to achieve an arc affected by gravity.
+     */
     private final float default_jump_speed = 0.5f;
+
+    /**
+     * Added every jump frame to the jump distance until it passes the
+     * maximum jump height.
+     */
     private final float jump_diff = 0.01f;
 
-    public Player(TiledMap m, float pos_x, float pos_y, Input i, View v)
+    /**
+     * Constructor, sets all necessary attributes of the player and creates
+     * animations.
+     * @param m Reference to the level's map.
+     * @param pos_x X axis coordinate of the spawn point.
+     * @param pos_y Y axis coordinate of the spawn point.
+     * @param i Reference to the game's input context.
+     * @param v Reference to the game's view.
+     */
+    public Player(TiledMap m, float pos_x, float pos_y, Input i, View v, Boolean d)
     {
-        super(m, pos_x, pos_y);
+        // Set all attributes and call Character's constructor.
+        super(m, pos_x, pos_y, d);
         input = i;
         view = v;
         jump_distance = 0.f;
@@ -44,6 +95,7 @@ public class Player extends Character
         curr_dir = DIRECTION.NONE;
         debug = false;
 
+        // Load all images into animation arrays.
         try
         { // Those sprites are 208x208, downscaling to 64x64.
             im_right = new Image[]{
@@ -87,19 +139,26 @@ public class Player extends Character
         anim_stand = new Animation(im_stand, duration, false);
         anim_hit = new Animation(im_hit, duration, false);
 
+        // Initial animation setup.
         curr_anim = anim_stand;
         curr_anim.setLooping(true);
         curr_anim.start();
 
+        // Bounding box setup.
         width = 96;
         height = 108;
         offset_x = 16; // Bounding box is in the middle of the player sprite.
         offset_y = 20; // And a bit below of the top of the head.
-        System.out.println("PLR = [" + width + ", " + height + "]");
     }
 
+    /**
+     * Main update method, calls state, movement and animation updates and
+     * moves the game's view if necessary.
+     * @param delta Time difference from the last update call.
+     */
     public void update(long delta)
     {
+        // Debug mode handling.
         if(input.isKeyDown(input.KEY_H))
             debug = false;
         else if(input.isKeyDown(input.KEY_G))
@@ -107,15 +166,18 @@ public class Player extends Character
         if(debug)
             handle_debug_input();
 
+        // Update the logic of the player.
         update_state(delta);
         update_movement(delta);
         
+        // Update the rendering resources of the player.
         view.move(x, y);
         curr_anim.update(delta);
     }
     
     /**
-     *
+     * Updates the player's state based on his input.
+     * @param delta Time difference from the last update call.
      */
     private void update_state(long delta)
     {
@@ -151,9 +213,11 @@ public class Player extends Character
                     jump();
                 break;
             case JUMPING:
-                jump_distance += jump_diff;
+                jump_distance += jump_diff; // Record the passed distance.
                 speed_y -= jump_diff; // Slow down the ascending speed.
 
+                // If the player hits the distance ceiling, start falling to
+                // the ground.
                 if(!input.isKeyDown(input.KEY_SPACE)
                 || jump_distance > max_jump_height)
                     fall();
@@ -162,17 +226,27 @@ public class Player extends Character
                 change_direction();
                 break;
             case FALLING:
+                // Changing direction while falling.
                 change_direction();
                 break;
         }
     }
 
+    /**
+     * Updates the player's position depending on his state and collision
+     * detection.
+     * @param delta Time difference since the last update call.
+     */
     private void update_movement(long delta)
     {
+        // mov_x and mov_y are the deltas of the player's position.
         float mov_x = 0.f;
         float mov_y = 0.f;
+
+        // Modifier changes the sign of the position differences.
         float modifier = get_direction_modifier();
 
+        // Calculate the values of the position differences mov_c and mov_y.
         switch(curr_state)
         {
             case STANDING:
@@ -187,7 +261,7 @@ public class Player extends Character
                 break;
             case FALLING:
                 mov_y += speed_y * delta;
-                // Allow small amout ov maneuverability.
+                // Allow small amout of maneuverability.
                 mov_x += speed_x * delta * modifier / 2;
                 break;
         }
@@ -196,6 +270,12 @@ public class Player extends Character
         apply_movement(mov_x, mov_y);
     }
 
+    /**
+     * Movement to the right means increasing the X axis, movement to the
+     * left means decreasing the X axis and similarly for the Y axis changes,
+     * this method calculated the sign of the position difference variable for
+     * the update_movement method.
+     */
     private float get_direction_modifier()
     {
         if(curr_dir == DIRECTION.LEFT)
@@ -206,6 +286,12 @@ public class Player extends Character
             return 0.f; // Will jump/fall straight up/down.
     }
 
+    /**
+     * Checks if the given movement is possible and if so, applies
+     * it to the player.
+     * @param mov_x X axis position difference.
+     * @param mov_y Y axis position difference.
+     */
     private void apply_movement(float mov_x, float mov_y)
     {
         if(can_move_to(x + mov_x, y + mov_y))
@@ -227,9 +313,12 @@ public class Player extends Character
         
         if(curr_state == STATE.FALLING && !can_move_to(x, y + mov_y))
             land(); // Obstructed.
-    
     }
 
+    /**
+     * Checks if the direction of the player should change and changes it
+     * if needed with the appropriate animation and state.
+     */
     private void change_direction()
     {
         if(curr_dir != DIRECTION.RIGHT
@@ -250,6 +339,9 @@ public class Player extends Character
         }
     }
 
+    /**
+     * Makes the player fall by changing his state and vertical speed.
+     */
     private void fall()
     {
         curr_state = STATE.FALLING;
@@ -257,6 +349,9 @@ public class Player extends Character
         speed_y = default_jump_speed * 2 / 3; // Slower falls.
     }
 
+    /**
+     * Makes the player jump by changing his state and vertical speed.
+     */
     private void jump()
     {
         // This will match animation with
@@ -273,6 +368,11 @@ public class Player extends Character
         jump_distance = 0f; // Just to be sure.
     }
 
+    /**
+     * Makes the player land by changing his state, also used to stop
+     * movement.
+     * TODO: Possible rename.
+     */
     private void land()
     {
         curr_dir = DIRECTION.NONE;
@@ -300,6 +400,11 @@ public class Player extends Character
             draw_debug_info(g);
     }
 
+    /**
+     * Draws all necessary debug info to the screen along
+     * with the black background box and solid tile bounding boxes.
+     * @param g Reference to the game's graphics context.
+     */
     private void draw_debug_info(Graphics g)
     {
         // Draw collision boxes of solid tiles.
@@ -323,7 +428,6 @@ public class Player extends Character
         g.drawString("View: [" + view.x + ", " + view.y + " | " + view.width + ", " + view.height + "]",10,50);
         g.drawString("State: " + curr_state, 10, 70);
         g.drawString("Direction: " + curr_dir, 170, 70);
-        g.drawString("x", x - view.x, y - view.y); // Tracking the x, y coords.
 
         // Drawing the debug bounds.
         Rectangle tmp_bounds = get_bounds();
@@ -335,6 +439,10 @@ public class Player extends Character
         g.setColor(tmp);
     }
 
+    /**
+     * Handles special input while in debug mode, like movement,
+     * teleportation and the debug state toggling.
+     */
     private void handle_debug_input()
     {
         if(input.isKeyDown(input.KEY_P))
