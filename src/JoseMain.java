@@ -129,12 +129,13 @@ public class JoseMain extends BasicGame
      */
     public void render(GameContainer cont, Graphics g) throws SlickException
     {
-        render_running(g);
         switch(curr_state)
         {
             case RUNNING:
+                render_running(g);
                 break;
             case END:
+                render_running(g);
                 g.setColor(Color.black);
                 g.drawString("YOU LOST!", 350, 325);
                 break;
