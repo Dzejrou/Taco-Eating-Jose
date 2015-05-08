@@ -142,7 +142,7 @@ public class JoseMain extends BasicGame
                 Player tmp = new Player(map, 100, 400, cont.getInput(), view);
 
                 characters.add(tmp);
-                characters.add(new Boo(map, 400, 100, view, tmp));
+                characters.add(new Boo(map, 400, 400, view, tmp));
                 break;
             default:
                 System.out.println("[Error] Wrong level selected.");
