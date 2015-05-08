@@ -66,7 +66,7 @@ public abstract class Character
         for(int i = 0; i < m.getWidth(); ++i)
             for(int j = 0; j < m.getHeight(); ++j)
             {
-                if("true".equals(m.getTileProperty(m.getTileId(i, j, 0), "solid", "false")))
+                if("true".equals(m.getTileProperty(m.getTileId(i, j, 1), "solid", "false")))
                 {
                     solid_tiles.add(new Rectangle(i * tile_width, j * tile_height, tile_width, tile_height));
                 }

@@ -42,7 +42,7 @@ public class JoseMain extends BasicGame
     {
         map = new TiledMap("resources/maps/map00.tmx");
         view = new View(map, 0, 0, 800, 700);
-        plr = new Player(map, 50, 400, cont.getInput(), view);
+        plr = new Player(map, 100, 400, cont.getInput(), view);
     }
 
     @Override

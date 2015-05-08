@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="150" height="10" tilewidth="70" tileheight="70" nextobjectid="1">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="170" height="10" tilewidth="70" tileheight="70" backgroundcolor="#00a694" nextobjectid="1">
  <tileset firstgid="1" name="tiles_spritesheet" tilewidth="70" tileheight="70" spacing="2">
   <image source="../sprites/tiles_spritesheet.png" width="914" height="936"/>
   <tile id="9">
@@ -48,9 +48,22 @@
    </properties>
   </tile>
  </tileset>
- <layer name="Tile Layer 1" width="150" height="10">
+ <tileset firstgid="157" name="bg" tilewidth="70" tileheight="70" spacing="2" margin="2">
+  <image source="../sprites/bg.png" width="256" height="256"/>
+ </tileset>
+ <layer name="Background" width="170" height="10">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAA+2XQQ6EIAxFyRzGxM3cYe4xe5ljzIIDzNLbzkYSUgu0WEsxvuQHYhBa/FYM7kabAHRFtPLySuuMgFVfeSf3nM7OK8a6Jn1O7C33WMeqrySxktcV/ZPDkq/O2vPeebXgEY2EJV9RaNnjEfKCrIhG4gekjca7WPLVlPQfmes9kPQVt+a11MgJtL19VYKSG2UMpV59t3k+hLE1uPUxrp3qrld8tM8Lmt9BqTOFhq+k/12fW/tyvPPVzFifi1RtwghuXw9SLYhyY0rzcIWtG4X5SnL+o6rFA31Vi/V9cC978Acx3Q5mcBcAAA==
+   H4sIAAAAAAAAA+3SQQkAMRDAwJVVs/V6JhZKjnmMgEDuzFxYdpa97uGffEqBTynwKQU+pcCnFPiUAp9S4FMKtj/9AFIakWiQGgAA
+  </data>
+ </layer>
+ <layer name="Foreground" width="170" height="10">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAA+2YTQ7CIBCFibeoB2jixju48QBeQjxCFy5csHbd26qRJhMcCgPMFAxf8gJpCjNMXqY/RnWkMY46YaTqpIXitED3KR3uOmmrGcwpnk1ZA3kmruOk+5ROLXXK9aOPf/Xp/q3Bjjlw1JyDWnxKQSNqiRI+HYC4qaHGLfp0RuRjEslInpx+WoPvqKz5dATznef6FpT0KbUnp/Tw0RlrJuZsW/g8pp8+1Devm1A8LDZU76d0JLx1Ztxb8rlf6hs31qcTEJXS/yaOdjwp2vvpgRCfSsne+TnXxY4cGPXbr6CuiHz3rO1DFRZ3EebTkvvnKpSP69NQrguptYzlDhRLbsxYXoVh+WKQGgAA
+  </data>
+ </layer>
+ <layer name="Walk-through" width="170" height="10">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAA+3SsQ0AIAwEMcZlEfamSYsoyQtbug1uDF5bFXTmUxL4lAQ+JYFP6Wgdgk58SgKfksinJLh9OqufbWy0VEaQGgAA
   </data>
  </layer>
 </map>

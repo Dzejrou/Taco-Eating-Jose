@@ -9,7 +9,7 @@
 
     <target name="compile">
         <mkdir dir="build/Jose" />
-        <javac srcdir="src" destdir="build" classpath="lib/slick.jar:lib/lwjgl.jar:src" fork="true" />
+        <javac srcdir="src" destdir="build" classpath="lib/slick.jar:lib/lwjgl.jar:src" fork="true" includeantruntime="false" />
     </target>
 
     <target name="run">

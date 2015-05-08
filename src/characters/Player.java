@@ -14,7 +14,7 @@ import Jose.src.View;
 
 public class Player extends Character
 {
-    private enum STATE { MOVING, JUMPING, HIT, STANDING, FALLING }
+    private enum STATE { MOVING, JUMPING, DEBUG, STANDING, FALLING }
     private enum DIRECTION { RIGHT, LEFT, NONE }
     private STATE curr_state;
     private DIRECTION curr_dir;
@@ -42,7 +42,7 @@ public class Player extends Character
         curr_state = STATE.STANDING;
         curr_dir = DIRECTION.NONE;
         falling_from_jump = false;
-        debug = true;
+        debug = false;
 
         try
         { // Those sprites are 208x208, downscaling to 64x64.
@@ -91,9 +91,9 @@ public class Player extends Character
         curr_anim.setLooping(true);
         curr_anim.start();
 
-        width = 64;
+        width = 96;
         height = 108;
-        offset_x = 32; // Bounding box is in the middle of the player sprite.
+        offset_x = 16; // Bounding box is in the middle of the player sprite.
         offset_y = 20; // And a bit below of the top of the head.
         System.out.println("PLR = [" + width + ", " + height + "]");
     }
@@ -107,6 +107,25 @@ public class Player extends Character
             view.x = 0;
             view.y = 0;
         }
+        else if(debug)
+        {
+            if(input.isKeyDown(input.KEY_K))
+                y += 10;
+            if(input.isKeyDown(input.KEY_I))
+                y -= 10;
+            if(input.isKeyDown(input.KEY_L))
+                x += 10;
+            if(input.isKeyDown(input.KEY_J))
+                x -= 10;
+            if(input.isKeyDown(input.KEY_N))
+                curr_state = STATE.DEBUG;
+            if(input.isKeyDown(input.KEY_M))
+                curr_state = STATE.STANDING;
+        }
+        if(input.isKeyDown(input.KEY_H))
+            debug = false;
+        else if(input.isKeyDown(input.KEY_G))
+            debug = true;
 
         update_state(delta);
         update_movement(delta);
@@ -122,6 +141,7 @@ public class Player extends Character
     {
         if(curr_state != STATE.FALLING /* Fall down. */
         && curr_state != STATE.JUMPING
+        && curr_state != STATE.DEBUG
         && can_move_to(x, y + speed_y * delta))
         {
             curr_state = STATE.FALLING;
@@ -229,18 +249,17 @@ public class Player extends Character
 
         if(curr_dir == DIRECTION.LEFT)
             modifier = -1.f;
-        else
+        else if(curr_dir == DIRECTION.RIGHT)
             modifier = 1.f;
+        else
+            modifier = 0.f; // Will jump/fall straight up/down.
 
         switch(curr_state)
         {
             case FALLING:
                 mov_y += speed_y * delta;
                 if(falling_from_jump)
-                {
-                    if(curr_dir != DIRECTION.NONE)
-                        mov_x += speed_x * delta * modifier;
-                }
+                    mov_x += speed_x * delta * modifier;
                 else
                 { // Walking off a ledge.
                     mov_x += speed_x * delta * modifier / 2;
@@ -253,8 +272,7 @@ public class Player extends Character
                 break;
             case JUMPING:
                 mov_y += speed_y * delta * -1;
-                if(curr_dir != DIRECTION.NONE) // Allows vertical jump.
-                    mov_x += speed_x * delta * modifier;
+                mov_x += speed_x * delta * modifier;
                 break;
             case STANDING:
                 // TODO: Moving platforms?
@@ -299,29 +317,33 @@ public class Player extends Character
         // RIP 6 hours of my life.
         //curr_anim.draw(x + view.x, y - view.y);
 
+        // Draws the sprite.
         curr_anim.draw(x - view.x, y - view.y);
 
-        for(Rectangle b : solid_tiles)
-        {
-            g.drawRect(b.getX() - view.x, b.getY() - view.y,
-                    b.getWidth(), b.getHeight());
-        }
-
         /* DEBUG */
-        // Drawing the debug text.
-        g.drawString("Player: [" + x + ", " + y + "]", 10, 30);
-        g.drawString("View: [" + view.x + ", " + view.y + " | " + view.width + ", " + view.height + "]",10,50);
-        g.drawString("State: " + curr_state, 10, 70);
-        g.drawString("Direction: " + curr_dir, 170, 70);
-        g.drawString("x", x - view.x, y - view.y); // Tracking the x, y coords.
+        if(debug)
+        {
+            // Drawing the debug text.
+            g.drawString("Player: [" + x + ", " + y + "]", 10, 30);
+            g.drawString("View: [" + view.x + ", " + view.y + " | " + view.width + ", " + view.height + "]",10,50);
+            g.drawString("State: " + curr_state, 10, 70);
+            g.drawString("Direction: " + curr_dir, 170, 70);
+            g.drawString("x", x - view.x, y - view.y); // Tracking the x, y coords.
 
-        // Drawing the debug bounds.
-        Rectangle tmp_bounds = get_bounds();
-        tmp_bounds.setX(tmp_bounds.getX() - view.x);
-        tmp_bounds.setY(tmp_bounds.getY() - view.y);
-        Color tmp = g.getColor();
-        g.setColor(Color.red);
-        g.draw(tmp_bounds);
-        g.setColor(tmp);
+            // Drawing the debug bounds.
+            Rectangle tmp_bounds = get_bounds();
+            tmp_bounds.setX(tmp_bounds.getX() - view.x);
+            tmp_bounds.setY(tmp_bounds.getY() - view.y);
+            Color tmp = g.getColor();
+            g.setColor(Color.red);
+            g.draw(tmp_bounds);
+            g.setColor(tmp);
+
+            for(Rectangle b : solid_tiles)
+            {
+                g.drawRect(b.getX() - view.x, b.getY() - view.y,
+                        b.getWidth(), b.getHeight());
+            }
+        }
     }
 }
