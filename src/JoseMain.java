@@ -8,6 +8,7 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.tiled.TiledMap;
 import org.newdawn.slick.Input;
+import org.newdawn.slick.Color;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -24,6 +25,16 @@ import Jose.src.characters.Boo;
 public class JoseMain extends BasicGame
 {
     /**
+     * Enum that denotes the game's state.
+     */
+    private enum GAME_STATE { RUNNING, END, MENU, DIALOG }
+
+    /**
+     * The game's current state.
+     */
+    private GAME_STATE curr_state;
+
+    /**
      * Reference to the current level's map.
      */
     private TiledMap map;
@@ -37,6 +48,11 @@ public class JoseMain extends BasicGame
      * Current level's view (camera).
      */
     private View view;
+
+    /**
+     * Reference to the player (outside of characters).
+     */
+    private Player player;
 
     /**
      * Constructor, sets all necessary attributes.
@@ -76,6 +92,7 @@ public class JoseMain extends BasicGame
      */
     public void init(GameContainer cont) throws SlickException
     {
+        curr_state = GAME_STATE.RUNNING;
         init_level(cont, 0);
     }
 
@@ -91,6 +108,9 @@ public class JoseMain extends BasicGame
         for(Character c : characters)
             c.update(i);
 
+        if(player.is_dead())
+            curr_state = GAME_STATE.END;
+
         // Check for dead characters.
         Iterator<Character> it = characters.iterator();
         while(it.hasNext())
@@ -105,9 +125,27 @@ public class JoseMain extends BasicGame
     /**
      * Renders all of the game's tiles, characters and objects.
      * @param cont The game container.
-     * @param graph The game's graphics context.
+     * @param g The game's graphics context.
      */
-    public void render(GameContainer cont, Graphics graph) throws SlickException
+    public void render(GameContainer cont, Graphics g) throws SlickException
+    {
+        render_running(g);
+        switch(curr_state)
+        {
+            case RUNNING:
+                break;
+            case END:
+                g.setColor(Color.black);
+                g.drawString("YOU LOST!", 350, 325);
+                break;
+        }
+    }
+
+    /**
+     * Renders the game while in the running state.
+     * @param g The game's gics context.
+     */
+    private void render_running(Graphics g)
     {
         // Calculate map offsets wrt the view.
         int tile_offset_x = (int) - (view.x % map.getTileWidth());
@@ -123,7 +161,7 @@ public class JoseMain extends BasicGame
 
         // Draw individual characters.
         for(Character c : characters)
-            c.draw(graph);
+            c.draw(g);
     }
 
     /**
@@ -139,10 +177,10 @@ public class JoseMain extends BasicGame
                 // Testing area.
                 map = new TiledMap("resources/maps/map00.tmx");
                 view = new View(map, 0, 0, 800, 700);
-                Player tmp = new Player(map, 100, 400, cont.getInput(), view);
+                player = new Player(map, 100, 400, cont.getInput(), view);
 
-                characters.add(tmp);
-                characters.add(new Boo(map, 400, 400, view, tmp));
+                characters.add(player);
+                characters.add(new Boo(map, 400, 400, view, player));
                 break;
             default:
                 System.out.println("[Error] Wrong level selected.");
