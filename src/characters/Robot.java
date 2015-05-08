@@ -22,7 +22,7 @@ public class Robot extends Character
     /**
      * Enum denoting the Robot's state.
      */
-    private enum STATE { ALIVE, DEAD }
+    private enum STATE { ALIVE, DEAD, CHARGING }
 
     /**
      * Current state of the Robot.
@@ -67,6 +67,17 @@ public class Robot extends Character
     private final float sprite_diff = 48.f;
 
     /**
+     * Counter used to check the time the Robot is lying
+     * dead on the floor.
+     */
+    private int death_counter;
+
+    /**
+     * Max amount of frames lying dead on the floor.
+     */
+    private int death_max = 100;
+
+    /**
      * Constructor, set's all necessary attributes and calls Character's constructor.
      * @param m Reference to the level's tile map.
      * @param pos_x X axis starting coordinate.
@@ -100,7 +111,7 @@ public class Robot extends Character
 
             im_dead = new Image[]{
                 new Image("resources/sprites/enemies/robot/robot_dead.png").
-                        getScaledCopy(64.f / 256.f)};
+                        getScaledCopy(64.f / 128.f)};
         }
         catch(SlickException ex)
         {
@@ -133,6 +144,60 @@ public class Robot extends Character
      */
     public void update(long delta)
     {
+        switch(curr_state)
+        {
+            case ALIVE:
+                update_alive(delta);
+                break;
+            case DEAD:
+                update_dead();
+                break;
+            case CHARGING:
+                break;
+        }
+    }
+
+    @Override
+    /**
+     *
+     */
+    public void draw(Graphics g)
+    {
+        // Do not render if not in the view.
+        if(!view.contains(get_bounds()))
+            return;
+
+        curr_anim.draw(x - view.x, y - view.y);
+
+        if(curr_state != STATE.DEAD && Character.debug)
+            draw_debug(g);
+    }
+
+    @Override
+    /**
+     *
+     */
+    public boolean is_dead()
+    {
+        return curr_state == STATE.DEAD && death_counter >= death_max;
+    }
+
+    @Override
+    /**
+     *
+     */
+    public void die()
+    {
+        y += height / 2; // Lie on the floor.
+        curr_state = STATE.DEAD;
+        curr_anim = anim_dead;
+    }
+
+    /**
+     *
+     */
+    private void update_alive(long delta)
+    {
         // Gravity.
         if(can_move_to(x, y + speed * delta))
             y += speed * delta;
@@ -155,36 +220,9 @@ public class Robot extends Character
             player.die(); // Other collision kills the player.
     }
 
-    @Override
-    /**
-     *
-     */
-    public void draw(Graphics g)
+    private void update_dead()
     {
-        // Do not render if not in the view.
-        if(!view.contains(get_bounds()))
-            return;
-
-        curr_anim.draw(x - view.x, y - view.y);
-
-        if(Character.debug)
-            draw_debug(g);
-    }
-
-    @Override
-    public boolean is_dead()
-    {
-        // TODO: Decay.
-        return curr_state == STATE.DEAD;
-    }
-
-    @Override
-    /**
-     *
-     */
-    public void die()
-    {
-        curr_state = STATE.DEAD;
+        death_counter++;
     }
 
     /**
