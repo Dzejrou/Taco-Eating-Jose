@@ -142,7 +142,8 @@ public class Boo extends Character
         }
 
         // Collisions with the player.
-        if(weak_hitbox().intersects(player.get_bounds()))
+        if(weak_hitbox().intersects(player.get_bounds())
+        && !player.is_dead())
             die(); // Jumped on from the top.
 
         if(!is_dead() && main_hitbox().intersects(player.get_bounds()))

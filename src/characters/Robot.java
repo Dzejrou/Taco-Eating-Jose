@@ -47,7 +47,7 @@ public class Robot extends Character
     /**
      * Speed of the Robot (moves only vertically).
      */
-    private final float speed = 0.3f;
+    private final float speed = 0.2f;
 
     /**
      * Amount of steps walked in the current direction.
@@ -75,7 +75,17 @@ public class Robot extends Character
     /**
      * Max amount of frames lying dead on the floor.
      */
-    private int death_max = 100;
+    private int death_max = 200;
+
+    /**
+     * Keeps track of frame number in the charge for late direction change.
+     */
+    private int charge_steps;
+
+    /**
+     * Maximum amount of steps that the robot will charge for.
+     */
+    private int max_charge_distance = 300;
 
     /**
      * Constructor, set's all necessary attributes and calls Character's constructor.
@@ -148,15 +158,27 @@ public class Robot extends Character
         // Do not update if not in the view.
         if(!view.contains(get_bounds()))
             return;
+
         switch(curr_state)
         {
             case ALIVE:
+                // Chase the player.
+                if(player_near())
+                    curr_state = STATE.CHARGING;
                 update_alive(delta);
                 break;
             case DEAD:
                 update_dead();
                 break;
             case CHARGING:
+                // Stop when the player got away.
+                if(charge_steps > max_charge_distance && !player_near())
+                {
+                    curr_state = STATE.ALIVE;
+                    charge_steps = 0;
+                }
+                charge_steps++;
+                update_charging(delta);
                 break;
         }
     }
@@ -207,10 +229,7 @@ public class Robot extends Character
      */
     private void update_alive(long delta)
     {
-        // Gravity.
-        if(can_move_to(x, y + speed * delta))
-            y += speed * delta;
-        curr_anim.update(delta);
+        update_gravity(delta);
 
         // Walks only horizontally.
         float mov_x = speed * delta * get_direction_modifier();
@@ -223,12 +242,62 @@ public class Robot extends Character
         else
             turn();
 
+        update_player_collisions();
+    }
+
+    /**
+     * Special update method to be used when the robot is chasing
+     * after the player.
+     * @param delta Time since the last update call.
+     */
+    private void update_charging(long delta)
+    {
+        update_gravity(delta);
+
+        float mov_x = speed * 2 * delta * get_direction_modifier();
+
+        if(can_move_to(x + mov_x, y))
+        { // No obstruction.
+            x += mov_x;
+        }
+        else // Give up the chase.
+            curr_state = STATE.ALIVE;
+
+        // Late direction change when player gets over the robot.
+        if(charge_steps % 60 == 0) // Every second?
+        {
+            if(curr_dir == DIRECTION.LEFT && player.get_x() > x + 10)
+                change_direction();
+            else if(curr_dir == DIRECTION.RIGHT && player.get_x() < x - 10)
+                change_direction();
+        }
+
+        update_player_collisions();
+    }
+
+    /**
+     * Checks for collisions between the robot and the player.
+     */
+    private void update_player_collisions()
+    {
         // Collisions with the player.
-        if(weak_hitbox().intersects(player.get_bounds()))
+        if(weak_hitbox().intersects(player.get_bounds())
+        && !player.is_dead())
             die(); // Jumped on from the top.
 
         if(!is_dead() && main_hitbox().intersects(player.get_bounds()))
             player.die(); // Other collision kills the player.
+    }
+
+    /**
+     * Updates the robot wrt gravity.
+     * @param delta Time since the last update call.
+     */
+    private void update_gravity(long delta)
+    {
+        if(can_move_to(x, y + speed * delta))
+            y += speed * delta;
+        curr_anim.update(delta);
     }
 
     /**
@@ -246,6 +315,7 @@ public class Robot extends Character
      */
     private void draw_debug(Graphics g)
     {
+        // Get and adjust the hitboxes.
         Rectangle main = main_hitbox();
         Rectangle weak = weak_hitbox();
         main.setX(main.getX() - view.x);
@@ -253,6 +323,7 @@ public class Robot extends Character
         weak.setX(weak.getX() - view.x);
         weak.setY(weak.getY() - view.y);
 
+        // Remember to backup the color!
         Color tmp = g.getColor();
         g.setColor(Color.red);
         g.draw(main);
@@ -275,21 +346,29 @@ public class Robot extends Character
         // Check if the distance walked is enough.
         if(step_count >= max_steps)
         {
-            if(curr_dir == DIRECTION.LEFT)
-            {
-                offset_x = 0.f;
-                x += sprite_diff; // Damn this sprite!
-                curr_dir = DIRECTION.RIGHT;
-                curr_anim = anim_walk_right;
-            }
-            else
-            {
-                x -= sprite_diff;
-                offset_x = sprite_diff;
-                curr_dir = DIRECTION.LEFT;
-                curr_anim = anim_walk_left;
-            }
+            change_direction();
             step_count = 0;
+        }
+    }
+
+    /**
+     * Changes the walking direction of the robot.
+     */
+    private void change_direction()
+    {
+        if(curr_dir == DIRECTION.LEFT)
+        {
+            offset_x = 0.f;
+            x += sprite_diff; // Damn this sprite!
+            curr_dir = DIRECTION.RIGHT;
+            curr_anim = anim_walk_right;
+        }
+        else
+        {
+            x -= sprite_diff;
+            offset_x = sprite_diff;
+            curr_dir = DIRECTION.LEFT;
+            curr_anim = anim_walk_left;
         }
     }
 
@@ -320,7 +399,17 @@ public class Robot extends Character
      * contact with the player.
      */
     private Rectangle weak_hitbox()
+    { // The 10 & 20 modifiers make sure the robot is unkillable by jumping
+      // from the side.
+        return new Rectangle(x + offset_x + 10, y + offset_y, width - 20, 5.f);
+    }
+
+    /**
+     * Returns true if the player is close to the robot signaling
+     * that the robot should start charging.
+     */
+    private boolean player_near()
     {
-        return new Rectangle(x + offset_x, y + offset_y, width, 5.f);
+        return Math.abs(player.get_x() - x) < 250;
     }
 }

@@ -182,7 +182,7 @@ public class JoseMain extends BasicGame
                 player = new Player(map, 100, 400, cont.getInput(), view);
 
                 characters.add(player);
-                characters.add(new Boo(map, 400, 400, view, player));
+                //characters.add(new Boo(map, 400, 400, view, player));
                 characters.add(new Robot(map, 600, 450, view, player));
                 break;
             default:
