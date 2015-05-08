@@ -140,10 +140,14 @@ public class Robot extends Character
 
     @Override
     /**
-     *
+     * Updates the state and logic of the robot.
+     * @param delta Time since the last update call.
      */
     public void update(long delta)
     {
+        // Do not update if not in the view.
+        if(!view.contains(get_bounds()))
+            return;
         switch(curr_state)
         {
             case ALIVE:
@@ -159,7 +163,8 @@ public class Robot extends Character
 
     @Override
     /**
-     *
+     * Draws the robot and the debug info if necessary.
+     * @param g The game's graphics context.
      */
     public void draw(Graphics g)
     {
@@ -175,7 +180,8 @@ public class Robot extends Character
 
     @Override
     /**
-     *
+     * Returns true if the robot is dead and necessary time has
+     * passed for the body to be deleted.
      */
     public boolean is_dead()
     {
@@ -184,7 +190,7 @@ public class Robot extends Character
 
     @Override
     /**
-     *
+     * Kills the robot:(
      */
     public void die()
     {
@@ -194,7 +200,10 @@ public class Robot extends Character
     }
 
     /**
-     *
+     * Special update method for when the robot is alive,
+     * updates the movement, collision detection, basic AI
+     * and takes in regard gravity.
+     * @param delta Time since the last update call.
      */
     private void update_alive(long delta)
     {
@@ -203,9 +212,11 @@ public class Robot extends Character
             y += speed * delta;
         curr_anim.update(delta);
 
+        // Walks only horizontally.
         float mov_x = speed * delta * get_direction_modifier();
+
         if(can_move_to(x + mov_x, y))
-        {
+        { // No obstruction.
             turn();
             x += mov_x;
         }
@@ -220,13 +231,18 @@ public class Robot extends Character
             player.die(); // Other collision kills the player.
     }
 
+    /**
+     * Special update method for when the robot is dead, takes care
+     * of the death counter representing the body decay.
+     */
     private void update_dead()
     {
         death_counter++;
     }
 
     /**
-     *
+     * Draws debug info - hitboxes.
+     * @param g The game's graphics context.
      */
     private void draw_debug(Graphics g)
     {
@@ -246,11 +262,17 @@ public class Robot extends Character
     }
 
     /**
-     *
+     * Turns the robot if needed amount of steps has been walked
+     * by changing it's direction and applying the sprite offset,
+     * since the sprites differ when flipped by a vertical
+     * axis.
      */
     private void turn()
     {
+        // Make the step.
         step_count++;
+
+        // Check if the distance walked is enough.
         if(step_count >= max_steps)
         {
             if(curr_dir == DIRECTION.LEFT)
@@ -272,7 +294,8 @@ public class Robot extends Character
     }
 
     /**
-     *
+     * Returns the sign modifier for movement in a certain
+     * direction.
      */
     private float get_direction_modifier()
     {
