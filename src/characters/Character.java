@@ -45,6 +45,11 @@ public abstract class Character
     protected List<Rectangle> solid_tiles;
 
     /**
+     * List of climbable tiles (ladders) in the current level's map.
+     */
+    protected List<Rectangle> climbable_tiles;
+
+    /**
      * Reference to the current level's map.
      */
     protected TiledMap map;
@@ -86,15 +91,26 @@ public abstract class Character
 
         // Generate the array holding all solid tiles.
         solid_tiles = new ArrayList<Rectangle>();
+        climbable_tiles = new ArrayList<Rectangle>();
         int tile_width = m.getTileWidth();
         int tile_height = m.getTileHeight();
         for(int i = 0; i < m.getWidth(); ++i)
             for(int j = 0; j < m.getHeight(); ++j)
             {
                 // The "false" means default value if the "solid" attribute is not present.
-                if("true".equals(m.getTileProperty(m.getTileId(i, j, 1), "solid", "false")))
+                if("true".equals(m.getTileProperty(m.getTileId(i, j, 2),
+                                "solid", "false")))
                 {
-                    solid_tiles.add(new Rectangle(i * tile_width, j * tile_height, tile_width, tile_height));
+                    solid_tiles.add(new Rectangle(i * tile_width,
+                                j * tile_height, tile_width, tile_height));
+                }
+
+                // It's a ladder!
+                if("true".equals(m.getTileProperty(m.getTileId(i, j, 1),
+                                "climbable", "false")))
+                {
+                    climbable_tiles.add(new Rectangle(i * tile_width,
+                                j * tile_height, tile_width, tile_height));
                 }
             }
     }

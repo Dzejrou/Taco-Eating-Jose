@@ -1,10 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="170" height="10" tilewidth="70" tileheight="70" backgroundcolor="#00a694" nextobjectid="1">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="170" height="10" tilewidth="70" tileheight="70" backgroundcolor="#00a694" nextobjectid="13">
  <tileset firstgid="1" name="tiles_spritesheet" tilewidth="70" tileheight="70" spacing="2">
   <image source="../sprites/tiles_spritesheet.png" width="914" height="936"/>
   <tile id="9">
    <properties>
     <property name="solid" value="true"/>
+   </properties>
+  </tile>
+  <tile id="19">
+   <properties>
+    <property name="climbable" value="true"/>
+   </properties>
+  </tile>
+  <tile id="31">
+   <properties>
+    <property name="climbable" value="true"/>
+   </properties>
+  </tile>
+  <tile id="36">
+   <properties>
+    <property name="type" value="boo"/>
+   </properties>
+  </tile>
+  <tile id="48">
+   <properties>
+    <property name="type" value="robot"/>
+   </properties>
+  </tile>
+  <tile id="60">
+   <properties>
+    <property name="type" value="player"/>
    </properties>
   </tile>
   <tile id="102">
@@ -51,6 +76,11 @@
  <tileset firstgid="157" name="bg" tilewidth="70" tileheight="70" spacing="2" margin="2">
   <image source="../sprites/bg.png" width="256" height="256"/>
  </tileset>
+ <layer name="Enemies" width="170" height="10" opacity="0">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAA+3TsQ0AIAgEQJdxAAdw/7WsrC1UJOauJvAkUAoAAPV1AAh08t6jfmdnjv+GtZasPkvvDH7fb+qvAwAA1w2E/h55kBoAAA==
+  </data>
+ </layer>
  <layer name="Background" width="170" height="10">
   <data encoding="base64" compression="gzip">
    H4sIAAAAAAAAA+3SQQkAMRDAwJVVs/V6JhZKjnmMgEDuzFxYdpa97uGffEqBTynwKQU+pcCnFPiUAp9S4FMKtj/9AFIakWiQGgAA
@@ -58,7 +88,7 @@
  </layer>
  <layer name="Foreground" width="170" height="10">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAA+2YSw7CIBRF2UZdQBMn7sGJC3ATsoUOHDjouOPuVk0wIZQKl/cRDCe5oWlSoC8nr5/ZdLSZg3TSaNXJKq3TAt1THOk6WZfVO0acLbnGZym8TpLuKU4tdaL6uMe/enp4ZXAjBYmaS1CLpwg2kpbg8HTwIk0NNW7R0zWSPSaVHelD6ac1eIfyzdMRPK8Fp6doTy7p4WMw1kzOvf3Cc+1+iq73MNtnfO+nOBpuXQTn1vSU6xs319PJCwr3v4mTG88Gez89AuujcPbO931d3SjBbLb9Cs3NhTpPbM5YYp5yzk9Naj+hp6m9fiitZS53L7lQ18zlCQOktr6QGgAA
+   H4sIAAAAAAAAA+2XMQ7DIAxFOUSXdGKK1KV36NID9BLtFTJ0yMDcubdtIhEJERP8A7go4klfSMgBx/lxiFENaYynRpxWJ3maT3GOXqfPvxMgaD7FKV2nlyNqHr32FIgNzR/Vp+dJnR1T4DyHGqjlfQ752Ud7sYt0wdxyk8OnnaPS1ODlWnzKRU/6EtKB+EEkK3lS+mkNvkPZ8mkPzkugVV6fcvv43viZ3htrBjmPSSLdT9H9RrX+xrd+iiPhrXvBtSV9musfl+vTwRHKnr65dc3VjjeFnU8vwP4oOXvnfF8PO5bAqHW/QvW0Sl2HWpMS5dOc66cqlo/v01iuC3tryeXtiEvqnlx+uaya/JAaAAA=
   </data>
  </layer>
  <layer name="Walk-through" width="170" height="10">

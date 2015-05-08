@@ -56,6 +56,11 @@ public class JoseMain extends BasicGame
     private Player player;
 
     /**
+     * Window dimensions.
+     */
+    private static int window_width, window_height;
+
+    /**
      * Constructor, sets all necessary attributes.
      */
     public JoseMain()
@@ -72,10 +77,16 @@ public class JoseMain extends BasicGame
      */
     public static void main(String[] args)
     {
+        window_width = 800;
+        window_height = 600;
         try
         {
-            AppGameContainer game = new AppGameContainer(new ScalableGame(new JoseMain(), 800, 700));
-            game.setDisplayMode(800,700,false);
+            AppGameContainer game = new AppGameContainer(new ScalableGame(
+                        new JoseMain(), window_width, window_height));
+            game.setDisplayMode(window_width, window_height, false);
+            //game.setDisplayMode(game.getScreenWidth(), game.getScreenHeight(), false);
+            //game.setFullscreen(true);
+            game.setTargetFrameRate(60);
             game.setVSync(true);
             game.start();
         }
@@ -105,6 +116,10 @@ public class JoseMain extends BasicGame
      */
     public void update(GameContainer cont, int i) throws SlickException
     {
+        // Escape key - TODO: Implement menu.
+        if(cont.getInput().isKeyDown(Input.KEY_ESCAPE))
+            System.exit(0);
+
         // Update characters.
         for(Character c : characters)
             c.update(i);
@@ -173,21 +188,55 @@ public class JoseMain extends BasicGame
      */
     private void init_level(GameContainer cont, int level_number) throws SlickException
     {
-        switch(level_number)
+        if(level_number < 0)
         {
-            case 0:
-                // Testing area.
-                map = new TiledMap("resources/maps/map00.tmx");
-                view = new View(map, 0, 0, 800, 700);
-                player = new Player(map, 100, 400, cont.getInput(), view);
-
-                characters.add(player);
-                //characters.add(new Boo(map, 400, 400, view, player));
-                characters.add(new Robot(map, 600, 450, view, player));
-                break;
-            default:
-                System.out.println("[Error] Wrong level selected.");
-                System.exit(1);
+            System.out.println("Wrong level number.");
+            System.exit(1);
         }
+
+        String num;
+        if(level_number >= 10)
+            num = new String("" + level_number);
+        else
+            num = new String("0" + level_number);
+
+        String level_name = "resources/maps/map" + num + ".tmx";
+        map = new TiledMap(level_name);
+        view = new View(map, 0, 100, window_width, window_height);
+
+        int tile_width = map.getTileWidth();
+        int tile_height = map.getTileHeight();
+        String type;
+        for(int i = 0; i < map.getWidth(); ++i)
+            for(int j = 0; j < map.getHeight(); ++j)
+            {
+                // Keeping the characters as blocks. (Not visible ingame.)
+                type = map.getTileProperty(map.getTileId(i, j, 0),
+                        "type", "nil");
+
+                if(type.equals("nil"))
+                    continue;
+
+                int x = i * tile_width;
+                int y = j * tile_height;
+                switch(type)
+                {
+                    case "player":
+                        player = new Player(map, x, y, cont.getInput(), view);
+                        characters.add(player);
+                        break;
+                    case "boo":
+                        Boo boo = new Boo(map, x, y, view, player);
+                        characters.add(boo);
+                        break;
+                    case "robot":
+                        Robot robot = new Robot(map, x, y, view, player);
+                        characters.add(robot);
+                        break;
+                    default:
+                        System.out.println("Invalid character type: " + type);
+                        System.exit(1);
+                }
+            }
     }
 }

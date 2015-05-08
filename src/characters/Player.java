@@ -182,7 +182,7 @@ public class Player extends Character
         if(curr_state != STATE.FALLING /* Fall down. */
         && curr_state != STATE.JUMPING
         && curr_state != STATE.DEBUG
-        && can_move_to(x, y + speed_y * delta))
+        && can_move_to(x, y + speed_y * delta) && !can_climb())
         {
             curr_state = STATE.FALLING;
         }
@@ -262,6 +262,16 @@ public class Player extends Character
                 // Allow small amout of maneuverability.
                 mov_x += speed_x * delta * modifier / 2;
                 break;
+        }
+
+        // Ladders.
+        if(curr_state != STATE.FALLING || curr_state != STATE.DEAD
+        && can_climb())
+        {
+            if(input.isKeyDown(input.KEY_W))
+                mov_y += speed_y * delta * -1;
+            else if(input.isKeyDown(input.KEY_S))
+                mov_y += speed_y * delta;
         }
 
         // Collision detection etc.
@@ -418,6 +428,14 @@ public class Player extends Character
             g.drawRect(b.getX() - view.x, b.getY() - view.y,
                     b.getWidth(), b.getHeight());
         }
+
+        // Draw collision boxes of ladders.
+        g.setColor(Color.magenta);
+        for(Rectangle b : climbable_tiles)
+        {
+            g.drawRect(b.getX() - view.x, b.getY() - view.y,
+                    b.getWidth(), b.getHeight());
+        }
         g.setColor(tmp);
 
         // Draws the debug background.
@@ -522,5 +540,19 @@ public class Player extends Character
         // Be like a god in the debug mode!
         if(!Character.debug)
             curr_state = STATE.DEAD;
+    }
+
+    /**
+     * Returns true if the player can climb a ladder
+     * at the player's current position, false otherwise.
+     */
+    private boolean can_climb()
+    {
+        for(Rectangle r : climbable_tiles)
+        {
+            if(r.intersects(get_bounds()))
+                return true;
+        }
+        return false;
     }
 }
