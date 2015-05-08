@@ -214,7 +214,8 @@ public class Boo extends Character
     }
 
     /**
-     *
+     * Returns the main hitbox which kills the player upon
+     * contact.
      */
     private Rectangle main_hitbox()
     {
@@ -222,13 +223,18 @@ public class Boo extends Character
     }
 
     /**
-     *
+     * Returns the secondary hitbox that kills the boo upon
+     * contact with the player.
      */
     private Rectangle weak_hitbox()
     {
         return new Rectangle(x, y, width, 5.f);
     }
 
+    /**
+     * Draws hitboxes in the debug mode.
+     * @param g The game's graphics context.
+     */
     private void draw_debug(Graphics g)
     {
         // Adjust hitboxes to view.
