@@ -8,6 +8,8 @@ import org.newdawn.slick.Graphics;
 import java.util.List;
 import java.util.ArrayList;
 
+import Jose.src.View;
+
 /**
  * Abstract class that is to be extended by all characters in the game.
  * @author Dzejrou
@@ -46,6 +48,21 @@ public abstract class Character
      * Reference to the current level's map.
      */
     protected TiledMap map;
+
+    /**
+     *
+     */
+    protected enum DIRECTION { RIGHT, LEFT, NONE }
+
+    /**
+     *
+     */
+    protected DIRECTION curr_dir;
+
+    /**
+     *
+     */
+    protected View view;
 
     /**
      * Constructor that spawns a new character on a given coordinates and

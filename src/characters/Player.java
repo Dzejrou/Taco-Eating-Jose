@@ -14,18 +14,19 @@ import Jose.src.View;
 
 public class Player extends Character
 {
+    /**
+     *
+     */
     private enum STATE { MOVING, JUMPING, DEBUG, STANDING, FALLING }
-    private enum DIRECTION { RIGHT, LEFT, NONE }
+
     private STATE curr_state;
-    private DIRECTION curr_dir;
     private Animation anim_left, anim_right, anim_jump_right,
             anim_jump_left, anim_stand, anim_hit;
     private Image[] im_left, im_right, im_jump_right, im_jump_left,
             im_stand, im_hit;
     private Input input;
     private float speed_x, speed_y, jump_distance;
-    private View view;
-    private boolean falling_from_jump, debug;
+    private boolean debug;
 
     private final float max_jump_height = 0.5f;
     private final float default_jump_speed = 0.5f;
@@ -41,7 +42,6 @@ public class Player extends Character
         speed_y = default_jump_speed;
         curr_state = STATE.STANDING;
         curr_dir = DIRECTION.NONE;
-        falling_from_jump = false;
         debug = false;
 
         try
@@ -100,32 +100,12 @@ public class Player extends Character
 
     public void update(long delta)
     {
-        if(debug && input.isKeyDown(input.KEY_P))
-        {
-            x = 100;
-            y = 400;
-            view.x = 0;
-            view.y = 0;
-        }
-        else if(debug)
-        {
-            if(input.isKeyDown(input.KEY_K))
-                y += 10;
-            if(input.isKeyDown(input.KEY_I))
-                y -= 10;
-            if(input.isKeyDown(input.KEY_L))
-                x += 10;
-            if(input.isKeyDown(input.KEY_J))
-                x -= 10;
-            if(input.isKeyDown(input.KEY_N))
-                curr_state = STATE.DEBUG;
-            if(input.isKeyDown(input.KEY_M))
-                curr_state = STATE.STANDING;
-        }
         if(input.isKeyDown(input.KEY_H))
             debug = false;
         else if(input.isKeyDown(input.KEY_G))
             debug = true;
+        if(debug)
+            handle_debug_input();
 
         update_state(delta);
         update_movement(delta);
@@ -150,93 +130,39 @@ public class Player extends Character
         switch(curr_state)
         {
             case STANDING:
-                if(input.isKeyDown(input.KEY_A))
-                {
-                    curr_state = STATE.MOVING;
-                    curr_dir = DIRECTION.LEFT;
-                    curr_anim = anim_left;
-                }
-                else if(input.isKeyDown(input.KEY_D))
-                {
-                    curr_state = STATE.MOVING;
-                    curr_dir = DIRECTION.RIGHT;
-                    curr_anim = anim_right;
-                }
-                else if(input.isKeyDown(input.KEY_SPACE))
-                {
-                    curr_state = STATE.JUMPING;
-                    if(curr_dir == DIRECTION.LEFT)
-                        curr_anim = anim_left;
-                    else
-                        curr_anim = anim_right;
+                // Account for possible movement key presses.
+                change_direction();
 
-                    // Just to be sure the values are right.
-                    speed_y = default_jump_speed;
-                    jump_distance = 0f;
-                }
+                if(input.isKeyDown(input.KEY_SPACE))
+                    jump();
                 break;
             case MOVING:
                 // Change the direction if necessary.
-                if(curr_dir != DIRECTION.LEFT && input.isKeyDown(input.KEY_A))
-                {
-                    curr_dir = DIRECTION.LEFT;
-                    curr_anim = anim_left;
-                }
-                else if(curr_dir != DIRECTION.RIGHT &&
-                        input.isKeyDown(input.KEY_D))
-                {
-                    curr_dir = DIRECTION.RIGHT;
-                    curr_anim = anim_right;
-                }
+                change_direction();
 
                 // Stopped moving.
                 if(curr_dir == DIRECTION.LEFT && !input.isKeyDown(input.KEY_A)
                 || curr_dir == DIRECTION.RIGHT /* Direction must match. */
                 && !input.isKeyDown(input.KEY_D))
-                {
-                    curr_state = STATE.STANDING;
-                    curr_dir = DIRECTION.NONE;
-                    curr_anim = anim_stand;
-                }
+                    land(); // Should probably rename this.
 
                 // Preserve the direction.
                 if(input.isKeyDown(input.KEY_SPACE))
-                {
-                    curr_state = STATE.JUMPING;
-
-                    // Just to be sure the values are right.
-                    speed_y = default_jump_speed;
-                    jump_distance = 0f;
-                }
+                    jump();
                 break;
             case JUMPING:
                 jump_distance += jump_diff;
                 speed_y -= jump_diff; // Slow down the ascending speed.
+
                 if(!input.isKeyDown(input.KEY_SPACE)
                 || jump_distance > max_jump_height)
-                {
-                    curr_state = STATE.FALLING;
-                    falling_from_jump = true;
-                    jump_distance = 0.f;
-                    speed_y = default_jump_speed;
-                }
+                    fall();
 
-                // Changing direction mid-air, do not allow this
-                // while falling.
-                if(curr_dir != DIRECTION.RIGHT
-                && input.isKeyDown(input.KEY_D))
-                {
-                    curr_dir = DIRECTION.RIGHT;
-                    curr_anim = anim_right;
-                }
-                else if(curr_dir != DIRECTION.LEFT
-                && input.isKeyDown(input.KEY_A))
-                {
-                    curr_dir = DIRECTION.LEFT;
-                    curr_anim = anim_left;
-                }
+                // Changing direction mid-air.
+                change_direction();
                 break;
             case FALLING:
+                change_direction();
                 break;
         }
     }
@@ -245,43 +171,45 @@ public class Player extends Character
     {
         float mov_x = 0.f;
         float mov_y = 0.f;
-        float modifier;
-
-        if(curr_dir == DIRECTION.LEFT)
-            modifier = -1.f;
-        else if(curr_dir == DIRECTION.RIGHT)
-            modifier = 1.f;
-        else
-            modifier = 0.f; // Will jump/fall straight up/down.
+        float modifier = get_direction_modifier();
 
         switch(curr_state)
         {
-            case FALLING:
-                mov_y += speed_y * delta;
-                if(falling_from_jump)
-                    mov_x += speed_x * delta * modifier;
-                else
-                { // Walking off a ledge.
-                    mov_x += speed_x * delta * modifier / 2;
-                }
+            case STANDING:
+                // TODO: Moving platforms?
                 break;
             case MOVING:
-                // Modifies the direction of movement.
-
                 mov_x += speed_x * delta * modifier;
                 break;
             case JUMPING:
                 mov_y += speed_y * delta * -1;
                 mov_x += speed_x * delta * modifier;
                 break;
-            case STANDING:
-                // TODO: Moving platforms?
+            case FALLING:
+                mov_y += speed_y * delta;
+                // Allow small amout ov maneuverability.
+                mov_x += speed_x * delta * modifier / 2;
                 break;
         }
 
         // Collision detection etc.
+        apply_movement(mov_x, mov_y);
+    }
+
+    private float get_direction_modifier()
+    {
+        if(curr_dir == DIRECTION.LEFT)
+            return -1.f;
+        else if(curr_dir == DIRECTION.RIGHT)
+            return 1.f;
+        else
+            return 0.f; // Will jump/fall straight up/down.
+    }
+
+    private void apply_movement(float mov_x, float mov_y)
+    {
         if(can_move_to(x + mov_x, y + mov_y))
-        {
+        { // No collisions.
             x += mov_x;
             y += mov_y;
         }
@@ -292,17 +220,64 @@ public class Player extends Character
                 && mov_y > 0) // Don't slide.
             y += mov_y;
         else if(curr_state == STATE.JUMPING && mov_x != 0)
-        { // Slide down the wall.
-            speed_y = default_jump_speed / 2; // Account for the wall.
-            curr_state = STATE.FALLING;
-        }
+            fall(); // Slide the wall.
+
+        if(curr_state == STATE.JUMPING && !can_move_to(x, y + mov_y))
+            fall(); // Hit ceiling.
         
-        if(curr_state == STATE.FALLING && !can_move_to(x, y + mov_y)) // Obstructed.
+        if(curr_state == STATE.FALLING && !can_move_to(x, y + mov_y))
+            land(); // Obstructed.
+    
+    }
+
+    private void change_direction()
+    {
+        if(curr_dir != DIRECTION.RIGHT
+        && input.isKeyDown(input.KEY_D))
         {
-            curr_anim = anim_stand;
-            curr_state = STATE.STANDING;
-            falling_from_jump = false;
+            if(curr_state == STATE.STANDING)
+                curr_state = STATE.MOVING;
+            curr_dir = DIRECTION.RIGHT;
+            curr_anim = anim_right;
         }
+        else if(curr_dir != DIRECTION.LEFT
+        && input.isKeyDown(input.KEY_A))
+        {
+            if(curr_state == STATE.STANDING)
+                curr_state = STATE.MOVING;
+            curr_dir = DIRECTION.LEFT;
+            curr_anim = anim_left;
+        }
+    }
+
+    private void fall()
+    {
+        curr_state = STATE.FALLING;
+        jump_distance = 0.f;
+        speed_y = default_jump_speed * 2 / 3; // Slower falls.
+    }
+
+    private void jump()
+    {
+        // This will match animation with
+        // the previous movement.
+        if(curr_dir == DIRECTION.LEFT)
+            curr_anim = anim_left;
+        else if(curr_dir == DIRECTION.RIGHT)
+            curr_anim = anim_right;
+        else
+            curr_anim = anim_stand; // Vertical jump
+
+        curr_state = STATE.JUMPING;
+        speed_y = default_jump_speed;
+        jump_distance = 0f; // Just to be sure.
+    }
+
+    private void land()
+    {
+        curr_dir = DIRECTION.NONE;
+        curr_anim = anim_stand;
+        curr_state = STATE.STANDING;
     }
 
     /**
@@ -322,28 +297,67 @@ public class Player extends Character
 
         /* DEBUG */
         if(debug)
+            draw_debug_info(g);
+    }
+
+    private void draw_debug_info(Graphics g)
+    {
+        // Draw collision boxes of solid tiles.
+        Color tmp = g.getColor(); // Color backup.
+        g.setColor(Color.blue);
+        for(Rectangle b : solid_tiles)
         {
-            // Drawing the debug text.
-            g.drawString("Player: [" + x + ", " + y + "]", 10, 30);
-            g.drawString("View: [" + view.x + ", " + view.y + " | " + view.width + ", " + view.height + "]",10,50);
-            g.drawString("State: " + curr_state, 10, 70);
-            g.drawString("Direction: " + curr_dir, 170, 70);
-            g.drawString("x", x - view.x, y - view.y); // Tracking the x, y coords.
-
-            // Drawing the debug bounds.
-            Rectangle tmp_bounds = get_bounds();
-            tmp_bounds.setX(tmp_bounds.getX() - view.x);
-            tmp_bounds.setY(tmp_bounds.getY() - view.y);
-            Color tmp = g.getColor();
-            g.setColor(Color.red);
-            g.draw(tmp_bounds);
-            g.setColor(tmp);
-
-            for(Rectangle b : solid_tiles)
-            {
-                g.drawRect(b.getX() - view.x, b.getY() - view.y,
-                        b.getWidth(), b.getHeight());
-            }
+            g.drawRect(b.getX() - view.x, b.getY() - view.y,
+                    b.getWidth(), b.getHeight());
         }
+        g.setColor(tmp);
+
+        // Draws the debug background.
+        tmp = g.getColor();
+        g.setColor(Color.black);
+        g.fillRect(0, 0, 360, 100);
+        g.setColor(tmp);
+
+        // Drawing the debug text.
+        g.drawString("Player: [" + x + ", " + y + "]", 10, 30);
+        g.drawString("View: [" + view.x + ", " + view.y + " | " + view.width + ", " + view.height + "]",10,50);
+        g.drawString("State: " + curr_state, 10, 70);
+        g.drawString("Direction: " + curr_dir, 170, 70);
+        g.drawString("x", x - view.x, y - view.y); // Tracking the x, y coords.
+
+        // Drawing the debug bounds.
+        Rectangle tmp_bounds = get_bounds();
+        tmp_bounds.setX(tmp_bounds.getX() - view.x);
+        tmp_bounds.setY(tmp_bounds.getY() - view.y);
+        tmp = g.getColor();
+        g.setColor(Color.red);
+        g.draw(tmp_bounds);
+        g.setColor(tmp);
+    }
+
+    private void handle_debug_input()
+    {
+        if(input.isKeyDown(input.KEY_P))
+        { // Get to the start.
+            x = 100;
+            y = 400;
+            view.x = 0;
+            view.y = 0;
+        }
+        // 4 directional debug movement.
+        if(input.isKeyDown(input.KEY_K))
+            y += 10;
+        if(input.isKeyDown(input.KEY_I))
+            y -= 10;
+        if(input.isKeyDown(input.KEY_L))
+            x += 10;
+        if(input.isKeyDown(input.KEY_J))
+            x -= 10;
+
+        // Special debug state, no gravity mode.
+        if(input.isKeyDown(input.KEY_N))
+            curr_state = STATE.DEBUG;
+        if(input.isKeyDown(input.KEY_M))
+            curr_state = STATE.STANDING;
     }
 }
