@@ -18,6 +18,7 @@ import Jose.src.util.View;
 import Jose.src.characters.Character;
 import Jose.src.characters.Player;
 import Jose.src.characters.Boo;
+import Jose.src.characters.Robot;
 
 /**
  * Main game class, updates and renders the game, selects levels.
@@ -182,6 +183,7 @@ public class JoseMain extends BasicGame
 
                 characters.add(player);
                 characters.add(new Boo(map, 400, 400, view, player));
+                characters.add(new Robot(map, 600, 450, view, player));
                 break;
             default:
                 System.out.println("[Error] Wrong level selected.");

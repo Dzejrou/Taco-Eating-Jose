@@ -12,6 +12,11 @@ import org.newdawn.slick.Color;
 
 import Jose.src.util.View;
 
+/**
+ * The boo enemy, ghost that only moves when the player
+ * is turned away from him.
+ * @author Dzejrou
+ */
 public class Boo extends Character
 {
     /**
