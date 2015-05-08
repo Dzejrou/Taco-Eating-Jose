@@ -319,6 +319,11 @@ public class Player extends Character
      */
     private void change_direction()
     {
+        // Avoid stuttering when both W and A are pressed.
+        if(input.isKeyDown(input.KEY_A)
+        && input.isKeyDown(input.KEY_D))
+            return;
+
         if(curr_dir != DIRECTION.RIGHT
         && input.isKeyDown(input.KEY_D))
         {
