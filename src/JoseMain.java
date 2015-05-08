@@ -80,7 +80,7 @@ public class JoseMain extends BasicGame
      */
     public void init(GameContainer cont) throws SlickException
     {
-        init_level(0);
+        init_level(cont, 0);
     }
 
     @Override
@@ -123,9 +123,10 @@ public class JoseMain extends BasicGame
 
     /**
      * Initializes a given level by loading it's characters, map, view etc.
+     * @param cont The game container.
      * @param level_number The number of the level being initialized.
      */
-    private void init_level(int level_number)
+    private void init_level(GameContainer cont, int level_number) throws SlickException
     {
         switch(level_number)
         {

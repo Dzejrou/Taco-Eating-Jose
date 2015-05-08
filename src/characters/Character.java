@@ -68,7 +68,7 @@ public abstract class Character
      * Reference to the main boolean object, true if the debug mode is on,
      * false otherwise.
      */
-    private Boolean debug;
+    protected Boolean debug;
 
     /**
      * Constructor that spawns a new character on a given coordinates and
