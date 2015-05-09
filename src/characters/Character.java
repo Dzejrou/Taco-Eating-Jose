@@ -8,6 +8,7 @@ import org.newdawn.slick.Graphics;
 import java.util.List;
 import java.util.ArrayList;
 
+import Jose.src.objects.Platform;
 import Jose.src.util.View;
 
 /**
@@ -80,19 +81,27 @@ public abstract class Character
     public static boolean debug;
 
     /**
+     * List of all platforms in the current level.
+     */
+    protected List<Platform> platforms;
+
+    /**
      * Constructor that spawns a new character on a given coordinates and
      * "binds" them to a level map (collision checking etc).
      * @param m Reference to the map of the current level.
      * @param pos_x Starting X axis coordinate.
      * @param pos_y Starting Y axis coordinate.
+     * @param p List of all platforms in the level.
      */
-    public Character(TiledMap m, float pos_x, float pos_y, View v)
+    public Character(TiledMap m, float pos_x, float pos_y, View v,
+            List<Platform> p)
     {
         // Setup the common attributes.
         map = m;
         x   = pos_x;
         y   = pos_y;
         view = v;
+        platforms = p;
 
         // Generate the array holding all solid tiles.
         solid_tiles = new ArrayList<Rectangle>();
@@ -199,6 +208,16 @@ public abstract class Character
             if(bounds.intersects(tmp))
             {
                 return true;
+            }
+        }
+
+        // Check for possible platforms.
+        if(platforms != null) // Won't check for enemies.
+        {
+            for(Platform p : platforms)
+            {
+                if(p.get_bounds().intersects(tmp))
+                    return true;
             }
         }
         return false;

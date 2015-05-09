@@ -3,6 +3,7 @@ package Jose.src.interfaces;
 /**
  * Interface used by coins and platforms with limited
  * life span.
+ * @author Dzejrou
  */
 public interface IDestructible
 {

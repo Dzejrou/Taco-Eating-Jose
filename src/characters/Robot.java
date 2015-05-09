@@ -75,7 +75,7 @@ public class Robot extends Character
     /**
      * Max amount of frames lying dead on the floor.
      */
-    private int death_max = 200;
+    private int death_max = 150;
 
     /**
      * Keeps track of frame number in the charge for late direction change.
@@ -98,7 +98,7 @@ public class Robot extends Character
      */
     public Robot(TiledMap m, float pos_x, float pos_y, View v, Player p)
     {
-        super(m, pos_x, pos_y, v);
+        super(m, pos_x, pos_y, v, null);
         player = p;
         curr_state = STATE.ALIVE;
         step_count = 0;

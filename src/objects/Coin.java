@@ -4,13 +4,14 @@ import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.geom.Circle;
 
-import Jose.src.interfaces.IDestructible;
 import Jose.src.util.View;
 
 /**
- *
+ * Class representing a coin in the game, can be collected by the
+ * player to increase his score.
+ * @author Dzejrou
  */
-public class Coin implements IDestructible
+public class Coin
 {
     /**
      * Position coordinates.
@@ -55,18 +56,17 @@ public class Coin implements IDestructible
     }
 
     /**
-     * {@inheritDoc}
+     * Returns true if the object is supposed to be destroyed,
+     * false otherwise.
      */
-    @Override
     public boolean is_destroyed()
     {
         return to_be_destroyed;
     }
 
     /**
-     * {@inheritDoc}
+     * Marks this object for destruction.
      */
-    @Override
     public void destroy()
     {
         to_be_destroyed = true;

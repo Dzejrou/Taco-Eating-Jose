@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import Jose.src.objects.Coin;
+import Jose.src.objects.Platform;
+import Jose.src.objects.TimedPlatform;
 import Jose.src.util.View;
 
 /**
@@ -95,11 +97,13 @@ public class Player extends Character
      * @param pos_y Y axis coordinate of the spawn point.
      * @param i Reference to the game's input context.
      * @param v Reference to the game's view.
+     * @param c List holding the coins in the map.
      */
-    public Player(TiledMap m, float pos_x, float pos_y, Input i, View v)
+    public Player(TiledMap m, float pos_x, float pos_y, Input i, View v,
+            List<Coin> c, List<Platform> p)
     {
         // Set all attributes and call Character's constructor.
-        super(m, pos_x, pos_y, v);
+        super(m, pos_x, pos_y, v, p);
         input = i;
         jump_distance = 0.f;
         speed_x = 0.3f;
@@ -107,6 +111,7 @@ public class Player extends Character
         curr_state = STATE.STANDING;
         curr_dir = DIRECTION.NONE;
         score = 0;
+        coins = c;
 
         // Load all images into animation arrays.
         try
@@ -138,9 +143,6 @@ public class Player extends Character
         {
             System.out.println(ex.getMessage());
         }
-
-        // Get the coins.
-        coins = get_coins_from_map(m);
 
         // Set the animations.
         int[] durations = {100, 100, 100, 100};
@@ -202,6 +204,27 @@ public class Player extends Character
 
         // Collect coins!
         update_coins();
+
+        // Update platforms.
+        for(Platform p : platforms)
+        {
+            p.update();
+
+            // Is the player standing on platform?
+            if(get_bounds().intersects(p.get_carry_bounds())
+            && curr_state != STATE.JUMPING && curr_state != STATE.FALLING)
+            { // Jump/fall would get modified.
+                // If can't move, just don't.
+                if(can_move_to(x + p.speed_x(), y))
+                    x += p.speed_x();
+
+                // If can't move, die:)
+                if(can_move_to(x, y + p.speed_y()))
+                    y += p.speed_y();
+                else if(p.speed_y() < 0) // UP.
+                    die(); // Squeezed between platform and wall.
+            }
+        }
         
         // Update the rendering resources of the player.
         view.move(x, y);
@@ -457,6 +480,10 @@ public class Player extends Character
         g.drawString("Score: " + score, view.width - 100, 30);
         g.setColor(tmp);
 
+        // Draw the platforms.
+        for(Platform p : platforms)
+            p.draw(g);
+
         /* DEBUG */
         if(Character.debug)
             draw_debug_info(g);
@@ -606,69 +633,6 @@ public class Player extends Character
         }
         return false;
     }
-
-    /**
-     * Returns all the coins in the map in a List.
-     * @param m Reference to the current level's map.
-     */
-    List<Coin> get_coins_from_map(TiledMap m)
-    {
-        List<Coin> tmp = new ArrayList<Coin>();
-        String value;
-        String color;
-        int val = 0;
-
-        int tile_width = m.getTileWidth();
-        int tile_height = m.getTileHeight();
-        for(int i = 0; i < m.getWidth(); ++i)
-        {
-            for(int j = 0; j < m.getHeight(); ++j)
-            {
-                int id = m.getTileId(i, j, 0);
-                if("coin".equals(m.getTileProperty(id, "type", "nil")))
-                {
-                    value = m.getTileProperty(id, "value", "1");
-                    try
-                    {
-                        val = Integer.parseInt(value);
-                    }
-                    catch(NumberFormatException ex)
-                    {
-                        System.out.println("Error, wrong coin value: " + value
-                                + " at ID #" + id);
-                        System.exit(1);
-                    }
-                    
-                    // Remember to center the coins!
-                    int pos_x = i * tile_width + tile_width / 2;
-                    int pos_y = j * tile_height + tile_height / 2;
-
-                    color = m.getTileProperty(id, "color", "nil");
-                    switch(color)
-                    {
-                        case "yellow":
-                            tmp.add(new Coin(pos_x, pos_y, val, view,
-                                        Color.yellow));
-                            break;
-                        case "red":
-                            tmp.add(new Coin(pos_x, pos_y, val, view,
-                                        Color.red));
-                            break;
-                        case "blue":
-                            tmp.add(new Coin(pos_x, pos_y, val, view,
-                                        Color.blue));
-                            break;
-                        default:
-                            System.out.println("Invalid coin color: " + color);
-                            System.exit(0);
-                    }
-                }
-            
-            }
-        }
-    return tmp;
-    }
-
 
     /**
      * Checks if the player has collected a coin and if so,

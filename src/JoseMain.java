@@ -19,6 +19,8 @@ import Jose.src.characters.Character;
 import Jose.src.characters.Player;
 import Jose.src.characters.Boo;
 import Jose.src.characters.Robot;
+import Jose.src.objects.Coin;
+import Jose.src.objects.Platform;
 
 /**
  * Main game class, updates and renders the game, selects levels.
@@ -221,7 +223,7 @@ public class JoseMain extends BasicGame
                 type = map.getTileProperty(map.getTileId(i, j, 0),
                         "type", "nil");
 
-                if(type.equals("nil"))
+                if(type.equals("nil") || type.equals("platform"))
                     continue;
 
                 int x = i * tile_width;
@@ -229,7 +231,9 @@ public class JoseMain extends BasicGame
                 switch(type)
                 {
                     case "player":
-                        player = new Player(map, x, y, cont.getInput(), view);
+                        player = new Player(map, x, y, cont.getInput(), view,
+                                get_coins_from_map(map),
+                                get_platforms_from_map(map));
                         characters.add(player);
                         break;
                     case "boo":
@@ -248,5 +252,120 @@ public class JoseMain extends BasicGame
                         System.exit(1);
                 }
             }
+    }
+
+    /**
+     * Returns all the coins in the map in a List.
+     * @param m Reference to the current level's map.
+     */
+    List<Coin> get_coins_from_map(TiledMap m)
+    {
+        List<Coin> tmp = new ArrayList<Coin>();
+        String value;
+        String color;
+        int val = 0;
+
+        int tile_width = m.getTileWidth();
+        int tile_height = m.getTileHeight();
+        for(int i = 0; i < m.getWidth(); ++i)
+        {
+            for(int j = 0; j < m.getHeight(); ++j)
+            {
+                int id = m.getTileId(i, j, 0);
+                if("coin".equals(m.getTileProperty(id, "type", "nil")))
+                {
+                    value = m.getTileProperty(id, "value", "1");
+                    try
+                    {
+                        val = Integer.parseInt(value);
+                    }
+                    catch(NumberFormatException ex)
+                    {
+                        System.out.println("Error, wrong coin value: " + value
+                                + " at ID #" + id);
+                        System.exit(1);
+                    }
+                    
+                    // Remember to center the coins!
+                    int pos_x = i * tile_width + tile_width / 2;
+                    int pos_y = j * tile_height + tile_height / 2;
+
+                    Coin tmp_c;
+                    color = m.getTileProperty(id, "color", "nil");
+                    switch(color)
+                    {
+                        case "yellow":
+                            tmp_c = new Coin(pos_x, pos_y, val, view,
+                                        Color.yellow);
+                            tmp.add(tmp_c);
+                            break;
+                        case "red":
+                            tmp_c = new Coin(pos_x, pos_y, val, view,
+                                        Color.red);
+                            tmp.add(tmp_c);
+                            break;
+                        case "blue":
+                            tmp_c = new Coin(pos_x, pos_y, val, view,
+                                        Color.blue);
+                            tmp.add(tmp_c);
+                            break;
+                        default:
+                            System.out.println("Invalid coin color: " + color);
+                            System.exit(0);
+                    }
+                }
+            
+            }
+        }
+    return tmp;
+    }
+
+    /**
+     * Returns list of all platforms in a map.
+     * @param m The target tile map.
+     */
+    private List<Platform> get_platforms_from_map(TiledMap m)
+    {
+        List<Platform> tmp = new ArrayList<Platform>();
+        Platform t_plat;
+        int tile_width = m.getTileWidth();
+        int tile_height = m.getTileHeight();
+        String count_str, max_str, mode;
+        int count = 0;
+        int max = 0;
+
+        for(int i = 0; i < m.getWidth(); ++i)
+        {
+            for(int j = 0; j < m.getHeight(); ++j)
+            {
+                // Just for better readability.
+                int id = m.getTileId(i, j, 0);
+                int pos_x = i * tile_width;
+                int pos_y = j * tile_height;
+
+                // Search by attribute in the map.
+                if("platform".equals(m.getTileProperty(id, "type", "nil")))
+                {
+                    count_str = m.getTileProperty(id, "count", "0");
+                    max_str = m.getTileProperty(id, "max", "0");
+                    mode = m.getTileProperty(id, "mode", "horizontal");
+                    try
+                    { // Str to int.
+                        count = Integer.parseInt(count_str);
+                        max = Integer.parseInt(max_str);
+                    }
+                    catch(NumberFormatException ex)
+                    {
+                        System.out.println(ex.getMessage());
+                        System.exit(1);
+                    }
+                    
+                    t_plat = new Platform(pos_x, pos_y, count, view,
+                            max, mode);
+                    tmp.add(t_plat);
+                }
+            }
+        }
+        return tmp;
     }
 }

@@ -61,7 +61,7 @@ public class Boo extends Character
      */
     public Boo(TiledMap m, float pos_x, float pos_y, View v, Player p)
     {
-        super(m, pos_x, pos_y, v);
+        super(m, pos_x, pos_y, v, null);
         player = p;
 
         try
