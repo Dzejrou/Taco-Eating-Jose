@@ -3,13 +3,17 @@ package Jose.src.characters;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
-import org.newdawn.slick.SpriteSheet;
 import org.newdawn.slick.Animation;
 import org.newdawn.slick.tiled.TiledMap;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.Color;
 
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Iterator;
+
+import Jose.src.objects.Coin;
 import Jose.src.util.View;
 
 /**
@@ -74,6 +78,16 @@ public class Player extends Character
     private final float jump_diff = 0.01f;
 
     /**
+     * List containing all of the current level's coins.
+     */
+    private List<Coin> coins;
+
+    /**
+     * Stores the score of the players.
+     */
+    private int score;
+
+    /**
      * Constructor, sets all necessary attributes of the player and creates
      * animations.
      * @param m Reference to the level's map.
@@ -92,6 +106,7 @@ public class Player extends Character
         speed_y = default_jump_speed;
         curr_state = STATE.STANDING;
         curr_dir = DIRECTION.NONE;
+        score = 0;
 
         // Load all images into animation arrays.
         try
@@ -124,6 +139,9 @@ public class Player extends Character
             System.out.println(ex.getMessage());
         }
 
+        // Get the coins.
+        coins = get_coins_from_map(m);
+
         // Set the animations.
         int[] durations = {100, 100, 100, 100};
         anim_right = new Animation(im_right, durations, false); // false == do not auto update
@@ -154,6 +172,7 @@ public class Player extends Character
      * moves the game's view if necessary.
      * @param delta Time difference from the last update call.
      */
+    @Override
     public void update(long delta)
     {
         // Debug mode handling.
@@ -167,6 +186,22 @@ public class Player extends Character
         // Update the logic of the player.
         update_state(delta);
         update_movement(delta);
+
+        // Did the player fall into lava/water?
+        for(Rectangle b : lethal_tiles)
+        {
+            if(b.intersects(get_bounds()))
+                die(); // RIP.
+        }
+
+        // Move the view up/down if necessary.
+        if(y <= view.y)
+            view.move_vertically(-1);
+        else if(y >= view.y + view.height)
+            view.move_vertically(1);
+
+        // Collect coins!
+        update_coins();
         
         // Update the rendering resources of the player.
         view.move(x, y);
@@ -224,6 +259,10 @@ public class Player extends Character
                 change_direction();
                 break;
             case FALLING:
+                // Ladders will prohibit falling.
+                if(can_climb())
+                    land();
+
                 // Changing direction while falling.
                 change_direction();
                 break;
@@ -265,8 +304,7 @@ public class Player extends Character
         }
 
         // Ladders.
-        if(curr_state != STATE.FALLING || curr_state != STATE.DEAD
-        && can_climb())
+        if(curr_state != STATE.DEAD && can_climb())
         {
             if(input.isKeyDown(input.KEY_W))
                 mov_y += speed_y * delta * -1;
@@ -358,7 +396,6 @@ public class Player extends Character
     private void fall()
     {
         curr_state = STATE.FALLING;
-        jump_distance = 0.f;
         speed_y = default_jump_speed * 2 / 3; // Slower falls.
     }
 
@@ -388,6 +425,7 @@ public class Player extends Character
      */
     private void land()
     {
+        jump_distance = 0.f;
         curr_dir = DIRECTION.NONE;
         curr_anim = anim_stand;
         curr_state = STATE.STANDING;
@@ -399,6 +437,7 @@ public class Player extends Character
      * text.
      * @param g The game's graphics context.
      */
+    @Override
     public void draw(Graphics g)
     {
 
@@ -407,6 +446,16 @@ public class Player extends Character
 
         // Draws the sprite.
         curr_anim.draw(x - view.x, y - view.y);
+
+        // Draw the coins.
+        for(Coin c : coins)
+            c.draw(g);
+
+        // Draw player's score.
+        Color tmp = g.getColor();
+        g.setColor(Color.black);
+        g.drawString("Score: " + score, view.width - 100, 30);
+        g.setColor(tmp);
 
         /* DEBUG */
         if(Character.debug)
@@ -441,7 +490,7 @@ public class Player extends Character
         // Draws the debug background.
         tmp = g.getColor();
         g.setColor(Color.black);
-        g.fillRect(0, 0, 360, 100);
+        g.fillRect(0, 0, 380, 100);
         g.setColor(tmp);
 
         // Drawing the debug text.
@@ -527,6 +576,7 @@ public class Player extends Character
     /**
      * Returns true if the player is dead, false otherwise.
      */
+    @Override
     public boolean is_dead()
     {
         return curr_state == STATE.DEAD;
@@ -535,6 +585,7 @@ public class Player extends Character
     /**
      * Kills the character.
      */
+    @Override
     public void die()
     {
         // Be like a god in the debug mode!
@@ -554,5 +605,87 @@ public class Player extends Character
                 return true;
         }
         return false;
+    }
+
+    /**
+     * Returns all the coins in the map in a List.
+     * @param m Reference to the current level's map.
+     */
+    List<Coin> get_coins_from_map(TiledMap m)
+    {
+        List<Coin> tmp = new ArrayList<Coin>();
+        String value;
+        String color;
+        int val = 0;
+
+        int tile_width = m.getTileWidth();
+        int tile_height = m.getTileHeight();
+        for(int i = 0; i < m.getWidth(); ++i)
+        {
+            for(int j = 0; j < m.getHeight(); ++j)
+            {
+                int id = m.getTileId(i, j, 0);
+                if("coin".equals(m.getTileProperty(id, "type", "nil")))
+                {
+                    value = m.getTileProperty(id, "value", "1");
+                    try
+                    {
+                        val = Integer.parseInt(value);
+                    }
+                    catch(NumberFormatException ex)
+                    {
+                        System.out.println("Error, wrong coin value: " + value
+                                + " at ID #" + id);
+                        System.exit(1);
+                    }
+                    
+                    // Remember to center the coins!
+                    int pos_x = i * tile_width + tile_width / 2;
+                    int pos_y = j * tile_height + tile_height / 2;
+
+                    color = m.getTileProperty(id, "color", "nil");
+                    switch(color)
+                    {
+                        case "yellow":
+                            tmp.add(new Coin(pos_x, pos_y, val, view,
+                                        Color.yellow));
+                            break;
+                        case "red":
+                            tmp.add(new Coin(pos_x, pos_y, val, view,
+                                        Color.red));
+                            break;
+                        case "blue":
+                            tmp.add(new Coin(pos_x, pos_y, val, view,
+                                        Color.blue));
+                            break;
+                        default:
+                            System.out.println("Invalid coin color: " + color);
+                            System.exit(0);
+                    }
+                }
+            
+            }
+        }
+    return tmp;
+    }
+
+
+    /**
+     * Checks if the player has collected a coin and if so,
+     * destroys it and adds it's value to the player's score.
+     */
+    private void update_coins()
+    {
+        Iterator<Coin> it = coins.iterator();
+        while(it.hasNext())
+        {
+            Coin c = it.next();
+            if(c.get_bounds().intersects(get_bounds()))
+            {
+                score += c.get_value();
+                c.destroy();
+                it.remove();
+            }
+        }
     }
 }

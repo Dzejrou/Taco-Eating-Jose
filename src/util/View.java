@@ -2,6 +2,7 @@ package Jose.src.util;
 
 import org.newdawn.slick.tiled.TiledMap;
 import org.newdawn.slick.geom.Rectangle;
+import org.newdawn.slick.geom.Shape;
 
 /**
  * The view class represent's a camera following the player,
@@ -58,6 +59,18 @@ public class View
     }
 
     /**
+     * Moves the view vertically up or down by it's height.
+     * @param mod Direction modifier.
+     */
+    public void move_vertically(int mod)
+    {
+        // Double height for the new position and the actual height.
+        if(y + height * mod + height <= map_height
+        && y + height * mod >= 0) // Can move.
+            y += height * mod;
+    }
+
+    /**
      * Moves the view to a given coordinate.
      * @param pos_x X axis coordinate.
      * @param pos_y Y axis coordinate - NOT USED.
@@ -73,7 +86,7 @@ public class View
      * false otherwise.
      * @param other Hitbox to be checked (rectangle).
      */
-    public boolean contains(Rectangle other)
+    public boolean contains(Shape other)
     {
         return new Rectangle(x, y, width, height).intersects(other);
     }

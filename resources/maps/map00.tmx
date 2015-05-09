@@ -1,78 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" orientation="orthogonal" renderorder="right-down" width="170" height="10" tilewidth="70" tileheight="70" backgroundcolor="#00a694" nextobjectid="13">
- <tileset firstgid="1" name="tiles_spritesheet" tilewidth="70" tileheight="70" spacing="2">
-  <image source="../sprites/tiles_spritesheet.png" width="914" height="936"/>
-  <tile id="9">
-   <properties>
-    <property name="solid" value="true"/>
-   </properties>
-  </tile>
-  <tile id="19">
-   <properties>
-    <property name="climbable" value="true"/>
-   </properties>
-  </tile>
-  <tile id="31">
-   <properties>
-    <property name="climbable" value="true"/>
-   </properties>
-  </tile>
-  <tile id="36">
-   <properties>
-    <property name="type" value="boo"/>
-   </properties>
-  </tile>
-  <tile id="48">
-   <properties>
-    <property name="type" value="robot"/>
-   </properties>
-  </tile>
-  <tile id="60">
-   <properties>
-    <property name="type" value="player"/>
-   </properties>
-  </tile>
-  <tile id="102">
-   <properties>
-    <property name="lethal" value="true"/>
-   </properties>
-  </tile>
-  <tile id="103">
-   <properties>
-    <property name="solid" value="true"/>
-   </properties>
-  </tile>
-  <tile id="104">
-   <properties>
-    <property name="solid" value="true"/>
-   </properties>
-  </tile>
-  <tile id="114">
-   <properties>
-    <property name="solid" value="true"/>
-   </properties>
-  </tile>
-  <tile id="128">
-   <properties>
-    <property name="solid" value="true"/>
-   </properties>
-  </tile>
-  <tile id="132">
-   <properties>
-    <property name="solid" value="true"/>
-   </properties>
-  </tile>
-  <tile id="138">
-   <properties>
-    <property name="lethal" value="true"/>
-   </properties>
-  </tile>
-  <tile id="152">
-   <properties>
-    <property name="solid" value="true"/>
-   </properties>
-  </tile>
- </tileset>
+ <tileset firstgid="1" source="tiles_spritesheet.tsx"/>
  <tileset firstgid="157" name="bg" tilewidth="70" tileheight="70" spacing="2" margin="2">
   <image source="../sprites/bg.png" width="256" height="256"/>
  </tileset>
@@ -88,7 +16,7 @@
  </layer>
  <layer name="Foreground" width="170" height="10">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAA+2XMQ7DIAxFOUSXdGKK1KV36NID9BLtFTJ0yMDcubdtIhEJERP8A7go4klfSMgBx/lxiFENaYynRpxWJ3maT3GOXqfPvxMgaD7FKV2nlyNqHr32FIgNzR/Vp+dJnR1T4DyHGqjlfQ752Ud7sYt0wdxyk8OnnaPS1ODlWnzKRU/6EtKB+EEkK3lS+mkNvkPZ8mkPzkugVV6fcvv43viZ3htrBjmPSSLdT9H9RrX+xrd+iiPhrXvBtSV9musfl+vTwRHKnr65dc3VjjeFnU8vwP4oOXvnfF8PO5bAqHW/QvW0Sl2HWpMS5dOc66cqlo/v01iuC3tryeXtiEvqnlx+uaya/JAaAAA=
+   H4sIAAAAAAAAA+2XQQ7CIBBFuYNu6opVEzfewY0H8BJ6hS5cuGDtzsTb2iY0IRTKTJkZkfCSHxJChyn5+aVGNaQxnijZEdcrBepzaqTh9OmbuF4p1O7T168bCMDt07ujWuD2aezMIOcYenYfWRubr9Wnh1GdHV2wefovfi4lT6EZoL21szRjb9RQ+LRz5MLx3S/By6X4FIoe9QlIR9YPIl3Jk5OnJfgOy5pPe+S8BFrR+hR7l9ty9+u9kZPcPMXcxySRzlPsfk+1/Ma3PI0T86mEty6MtSV9SvWPC/Xp4AjLltxce+Zkx7PC3U+PiP0nMHlKmZ3Te13tyIFRy7zC6maVWydUM6SQTynr5yrVj+/TVK8zW88SysMRlNw9oXwB8De1mZAaAAA=
   </data>
  </layer>
  <layer name="Walk-through" width="170" height="10">

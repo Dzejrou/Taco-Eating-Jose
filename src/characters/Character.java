@@ -50,6 +50,11 @@ public abstract class Character
     protected List<Rectangle> climbable_tiles;
 
     /**
+     * List of lethal tiles (water, lava) in the current level's map.
+     */
+    protected List<Rectangle> lethal_tiles;
+
+    /**
      * Reference to the current level's map.
      */
     protected TiledMap map;
@@ -72,7 +77,7 @@ public abstract class Character
     /**
      * Boolean value that indicates if the debug mode is on.
      */
-    protected static boolean debug;
+    public static boolean debug;
 
     /**
      * Constructor that spawns a new character on a given coordinates and
@@ -92,25 +97,35 @@ public abstract class Character
         // Generate the array holding all solid tiles.
         solid_tiles = new ArrayList<Rectangle>();
         climbable_tiles = new ArrayList<Rectangle>();
+        lethal_tiles = new ArrayList<Rectangle>();
         int tile_width = m.getTileWidth();
         int tile_height = m.getTileHeight();
         for(int i = 0; i < m.getWidth(); ++i)
             for(int j = 0; j < m.getHeight(); ++j)
             {
-                // The "false" means default value if the "solid" attribute is not present.
-                if("true".equals(m.getTileProperty(m.getTileId(i, j, 2),
-                                "solid", "false")))
+                int id = m.getTileId(i, j, 2);
+                int tmp_x = i * tile_width;
+                int tmp_y = j * tile_height;
+                // The "false" means default value if the "solid"
+                // attribute is not present.
+                if("true".equals(m.getTileProperty(id, "solid", "false")))
                 {
-                    solid_tiles.add(new Rectangle(i * tile_width,
-                                j * tile_height, tile_width, tile_height));
+                    solid_tiles.add(new Rectangle(tmp_x, tmp_y, tile_width,
+                                tile_height));
                 }
 
                 // It's a ladder!
-                if("true".equals(m.getTileProperty(m.getTileId(i, j, 1),
-                                "climbable", "false")))
+                if("true".equals(m.getTileProperty(id, "climbable", "false")))
                 {
-                    climbable_tiles.add(new Rectangle(i * tile_width,
-                                j * tile_height, tile_width, tile_height));
+                    climbable_tiles.add(new Rectangle(tmp_x, tmp_y, tile_width,
+                                tile_height));
+                }
+
+                // It's lethal!
+                if("true".equals(m.getTileProperty(id, "lethal", "false")))
+                {
+                    lethal_tiles.add(new Rectangle(tmp_x, tmp_y, tile_width,
+                                tile_height));
                 }
             }
     }

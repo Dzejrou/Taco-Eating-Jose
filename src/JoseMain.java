@@ -88,6 +88,7 @@ public class JoseMain extends BasicGame
             //game.setFullscreen(true);
             game.setTargetFrameRate(60);
             game.setVSync(true);
+            game.setShowFPS(false);
             game.start();
         }
         catch(SlickException ex)
@@ -105,7 +106,7 @@ public class JoseMain extends BasicGame
     public void init(GameContainer cont) throws SlickException
     {
         curr_state = GAME_STATE.RUNNING;
-        init_level(cont, 0);
+        init_level(cont, 1);
     }
 
     @Override
@@ -156,6 +157,11 @@ public class JoseMain extends BasicGame
                 g.drawString("YOU LOST!", 350, 325);
                 break;
         }
+
+        if(Character.debug)
+        {
+            g.drawString("FPS: " + cont.getFPS(), 10, 10);
+        }
     }
 
     /**
@@ -202,7 +208,8 @@ public class JoseMain extends BasicGame
 
         String level_name = "resources/maps/map" + num + ".tmx";
         map = new TiledMap(level_name);
-        view = new View(map, 0, 100, window_width, window_height);
+        view = new View(map, 0, map.getTileHeight() * map.getHeight()
+                - window_height, window_width, window_height);
 
         int tile_width = map.getTileWidth();
         int tile_height = map.getTileHeight();
@@ -232,6 +239,9 @@ public class JoseMain extends BasicGame
                     case "robot":
                         Robot robot = new Robot(map, x, y, view, player);
                         characters.add(robot);
+                        break;
+                    case "coin":
+                        // DO NOTHING...
                         break;
                     default:
                         System.out.println("Invalid character type: " + type);

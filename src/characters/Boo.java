@@ -92,11 +92,11 @@ public class Boo extends Character
         height = 59.f; // Minus 5 for the weak hitbox.
     }
 
-    @Override
     /**
      * Updates the boo.
      * @param delta Time passed since the last update call.
      */
+    @Override
     public void update(long delta)
     {
         // Do not update if the boo is not in the view.
@@ -176,11 +176,11 @@ public class Boo extends Character
         }
     }
 
-    @Override
     /**
      * Draws the boo.
      * @param g Reference to the game's graphics context.
      */
+    @Override
     public void draw(Graphics g)
     {
         // Do not render if the boo is not in the view.

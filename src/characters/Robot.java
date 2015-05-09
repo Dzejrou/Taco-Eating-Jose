@@ -148,11 +148,11 @@ public class Robot extends Character
         curr_dir = DIRECTION.LEFT;
     }
 
-    @Override
     /**
      * Updates the state and logic of the robot.
      * @param delta Time since the last update call.
      */
+    @Override
     public void update(long delta)
     {
         // Do not update if not in the view.
@@ -183,11 +183,11 @@ public class Robot extends Character
         }
     }
 
-    @Override
     /**
      * Draws the robot and the debug info if necessary.
      * @param g The game's graphics context.
      */
+    @Override
     public void draw(Graphics g)
     {
         // Do not render if not in the view.
@@ -200,20 +200,20 @@ public class Robot extends Character
             draw_debug(g);
     }
 
-    @Override
     /**
      * Returns true if the robot is dead and necessary time has
      * passed for the body to be deleted.
      */
+    @Override
     public boolean is_dead()
     {
         return curr_state == STATE.DEAD && death_counter >= death_max;
     }
 
-    @Override
     /**
      * Kills the robot:(
      */
+    @Override
     public void die()
     {
         y += height / 2; // Lie on the floor.
