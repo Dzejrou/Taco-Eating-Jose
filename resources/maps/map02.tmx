@@ -167,7 +167,7 @@
  </tileset>
  <layer name="Enemies" width="150" height="50">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAA+3OMQ0AAAjAMIzhDuEo4IKHpP2XLAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAJjkoq2zCwCAPxrr58DjMHUAAA==
+   H4sIAAAAAAAAA+3OQREAAAQAMMW0E1wCX+7clmARAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADAJK8DvFDXAQBY1GG0eLQwdQAA
   </data>
  </layer>
  <layer name="Background" width="150" height="50" visible="0">
@@ -177,7 +177,7 @@
  </layer>
  <layer name="Foreground" width="150" height="50">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAA+3SoQ0AIAxFQbYFxmBzEIiqOkIId8lzFRW/FAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAG4aq7brl3/hD3FzMfv7T02K28juTsW7JtbJxDowdQAA
+   H4sIAAAAAAAAA+3UQQrDIBAFUI8yt0t6jBwjt027kxLGREIr8h78xYCK4MdSAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACYVbyzVol/XoZpRGOGHtGYoUc0ZugRjRnuWpMwl63k7/3Jq+PMsz17EsZVd+RuF35Br+bzdOe+/7krZ+rVGJYk9Ztm60aKXo3hABwgOfEwdQAA
   </data>
  </layer>
  <layer name="Walkthrough" width="150" height="50">

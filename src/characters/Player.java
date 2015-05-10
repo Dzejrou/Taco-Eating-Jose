@@ -537,13 +537,6 @@ public class Player extends Character
      */
     private void handle_debug_input()
     {
-        if(input.isKeyDown(input.KEY_P))
-        { // Get to the start.
-            x = 100;
-            y = 400;
-            view.x = 0;
-            view.y = 0;
-        }
         // 4 directional debug movement.
         if(input.isKeyDown(input.KEY_K))
             y += 10;

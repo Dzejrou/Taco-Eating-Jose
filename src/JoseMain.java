@@ -96,6 +96,13 @@ public class JoseMain extends BasicGame
     private Portal portal;
 
     /**
+     * Keeps track of the number of frames since the last level change,
+     * used for debug purposes - this prohibits one button click to change
+     * the level multiple times.
+     */
+    private int level_change_cooldown;
+
+    /**
      * Constructor, sets all necessary attributes.
      */
     public JoseMain()
@@ -103,6 +110,9 @@ public class JoseMain extends BasicGame
         super("Taco Eating Jose");
 
         characters = new ArrayList<Character>();
+        window_width = 800;
+        window_height = 600;
+        level_change_cooldown = 0;
     }
 
     /**
@@ -112,8 +122,6 @@ public class JoseMain extends BasicGame
      */
     public static void main(String[] args)
     {
-        window_width = 800;
-        window_height = 600;
         while(true)
         {
             try
@@ -201,6 +209,27 @@ public class JoseMain extends BasicGame
             Character.debug = false;
         else if(debug_possible && cont.getInput().isKeyDown(Input.KEY_G))
             Character.debug = true;
+
+        // Changing levels in debug mode.
+        if(Character.debug)
+        {
+            // Pauses between level changes.
+            if(level_change_cooldown < 30)
+                level_change_cooldown++;
+
+            if(level_change_cooldown == 30 &&
+                    cont.getInput().isKeyDown(Input.KEY_O))
+            {
+                level_change_cooldown = 0;
+                prev_level();
+            }
+            else if(level_change_cooldown == 30 &&
+                    cont.getInput().isKeyDown(Input.KEY_P))
+            {
+                level_change_cooldown = 0;
+                next_level();
+            }
+        }
 
         // Level finnished?
         if(portal.get_bounds().intersects(player.get_bounds()))
@@ -480,15 +509,20 @@ public class JoseMain extends BasicGame
     public void next_level() throws SlickException
     {
         if(current_level + 1 >= levels_total)
-        { // TODO: Win screen!
+        {
+            // Debuggers don't need no win!
+            if(Character.debug)
+                return;
+
             curr_state = GAME_STATE.WON;
             player_score = player.get_score();
             player.die(); // Ha Ha!
-            return;
         }
-
-        current_level++;
-        init_level(game_container, current_level);
+        else
+        { // Load the next level.
+            current_level++;
+            init_level(game_container, current_level);
+        }
     }
 
     /**
@@ -498,7 +532,12 @@ public class JoseMain extends BasicGame
     public void prev_level() throws SlickException
     {
         if(current_level - 1 < 0)
-        { // Just don't load it and inform the user.
+        {
+            // Just don't load when the debug mode is on.
+            if(Character.debug)
+                return;
+
+            // Don't load and inform about the error when out of debug mode.
             System.out.println("[Error] Trying to load an invalid level:"
                     + (current_level - 1));
             return;
