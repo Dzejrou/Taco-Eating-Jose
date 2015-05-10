@@ -63,6 +63,33 @@ public class JoseMain extends BasicGame
     private static int window_width, window_height;
 
     /**
+     * Current level number (for map choice).
+     */
+    public int current_level;
+
+    /**
+     * Total number of levels accessible, increment this number after
+     * creating a level.
+     */
+    public final int levels_total = 2;
+
+    /**
+     * Reference to the game container.
+     */
+    private GameContainer game_container;
+
+    /**
+     * Used to preserve last level's score, so that when the player dies,
+     * his score gets reset to this value.
+     */
+    private int player_score;
+
+    /**
+     * Indicates if the player can enter the debug mode.
+     */
+    private final boolean debug_possible = true;
+
+    /**
      * Constructor, sets all necessary attributes.
      */
     public JoseMain()
@@ -81,21 +108,22 @@ public class JoseMain extends BasicGame
     {
         window_width = 800;
         window_height = 600;
-        try
+        while(true)
         {
-            AppGameContainer game = new AppGameContainer(new ScalableGame(
-                        new JoseMain(), window_width, window_height));
-            game.setDisplayMode(window_width, window_height, false);
-            //game.setDisplayMode(game.getScreenWidth(), game.getScreenHeight(), false);
-            //game.setFullscreen(true);
-            game.setTargetFrameRate(60);
-            game.setVSync(true);
-            game.setShowFPS(false);
-            game.start();
-        }
-        catch(SlickException ex)
-        {
-            System.out.println(ex.getMessage());
+            try
+            {
+                AppGameContainer game = new AppGameContainer(new ScalableGame(
+                            new JoseMain(), window_width, window_height));
+                game.setDisplayMode(window_width, window_height, false);
+                game.setTargetFrameRate(60);
+                game.setVSync(true);
+                game.setShowFPS(false);
+                game.start();
+            }
+            catch(SlickException ex)
+            {
+                System.out.println(ex.getMessage());
+            }
         }
     }
 
@@ -104,11 +132,15 @@ public class JoseMain extends BasicGame
      * Initializes the game object by calling init_level on the
      * starting level.
      * @param cont The game container.
+     * @throws SlickException When error occurs during level load.
      */
     public void init(GameContainer cont) throws SlickException
     {
+        game_container = cont;
+        player_score = 0;
         curr_state = GAME_STATE.RUNNING;
-        init_level(cont, 1);
+        current_level = 1;
+        init_level(cont, current_level);
     }
 
     @Override
@@ -116,6 +148,8 @@ public class JoseMain extends BasicGame
      * Updates the game on each frame.
      * @param cont The game container.
      * @param i Time passed since the last update call.
+     * @throws SlickException When error occurs during GameContainer
+     *                        manipulation.
      */
     public void update(GameContainer cont, int i) throws SlickException
     {
@@ -130,6 +164,13 @@ public class JoseMain extends BasicGame
         if(player.is_dead())
             curr_state = GAME_STATE.END;
 
+        if(curr_state == GAME_STATE.END && cont.getInput().
+                isKeyDown(Input.KEY_ENTER))
+        {
+            curr_state = GAME_STATE.RUNNING;
+            init_level(cont, current_level); // Reload the level.
+        }
+
         // Check for dead characters.
         Iterator<Character> it = characters.iterator();
         while(it.hasNext())
@@ -138,6 +179,12 @@ public class JoseMain extends BasicGame
             if(c.is_dead())
                 it.remove();
         }
+
+        // Turns debug mode ON if possible.
+        if(debug_possible && cont.getInput().isKeyDown(Input.KEY_H))
+            Character.debug = false;
+        else if(debug_possible && cont.getInput().isKeyDown(Input.KEY_G))
+            Character.debug = true;
     }
 
     @Override
@@ -145,6 +192,7 @@ public class JoseMain extends BasicGame
      * Renders all of the game's tiles, characters and objects.
      * @param cont The game container.
      * @param g The game's graphics context.
+     * @throws SlickException When error occurs during graphis drawing.
      */
     public void render(GameContainer cont, Graphics g) throws SlickException
     {
@@ -157,6 +205,7 @@ public class JoseMain extends BasicGame
                 render_running(g);
                 g.setColor(Color.black);
                 g.drawString("YOU LOST!", 350, 325);
+                g.drawString("Press enter to restart the level or escape to leave the game.", 150, 350);
                 break;
         }
 
@@ -193,6 +242,7 @@ public class JoseMain extends BasicGame
      * Initializes a given level by loading it's characters, map, view etc.
      * @param cont The game container.
      * @param level_number The number of the level being initialized.
+     * @throws SlickException When error occurs during level load.
      */
     private void init_level(GameContainer cont, int level_number) throws SlickException
     {
@@ -212,6 +262,7 @@ public class JoseMain extends BasicGame
         map = new TiledMap(level_name);
         view = new View(map, 0, map.getTileHeight() * map.getHeight()
                 - window_height, window_width, window_height);
+        characters = new ArrayList<Character>(); // Reset the enemies!
 
         int tile_width = map.getTileWidth();
         int tile_height = map.getTileHeight();
@@ -367,5 +418,39 @@ public class JoseMain extends BasicGame
             }
         }
         return tmp;
+    }
+
+    /**
+     * Loads the next level of the game.
+     * @throws SlickException When error occurs during level load.
+     */
+    public void next_level() throws SlickException
+    {
+        if(current_level + 1 >= levels_total)
+        { // Don't load and inform.
+            System.out.println("[Error] Trying to load an invalid level: "
+                    + (current_level + 1));
+            return;
+        }
+
+        current_level++;
+        init_level(game_container, current_level);
+    }
+
+    /**
+     * Loads the previous level of the game.
+     * @throws SlickException When error occurs during the level load.
+     */
+    public void prev_level() throws SlickException
+    {
+        if(current_level - 1 < 0)
+        { // Just don't load it and inform the user.
+            System.out.println("[Error] Trying to load an invalid level:"
+                    + (current_level - 1));
+            return;
+        }
+
+        current_level--;
+        init_level(game_container, current_level);
     }
 }

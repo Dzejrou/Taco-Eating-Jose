@@ -177,10 +177,6 @@ public class Player extends Character
     public void update(long delta)
     {
         // Debug mode handling.
-        if(input.isKeyDown(input.KEY_H))
-            Character.debug = false;
-        else if(input.isKeyDown(input.KEY_G))
-            Character.debug = true;
         if(Character.debug)
             handle_debug_input();
 
