@@ -15,7 +15,6 @@ import java.util.Iterator;
 
 import Jose.src.objects.Coin;
 import Jose.src.objects.Platform;
-import Jose.src.objects.TimedPlatform;
 import Jose.src.util.View;
 
 /**
