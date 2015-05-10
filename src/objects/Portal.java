@@ -63,6 +63,10 @@ public class Portal
         g.setColor(tmp);
     }
 
+    /**
+     * Returns a bounding rectangle of this portal used to check for
+     * collisions with the player.
+     */
     public Rectangle get_bounds()
     {
         return portal;

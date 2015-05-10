@@ -234,7 +234,7 @@ public class Boo extends Character
      */
     private Rectangle weak_hitbox()
     {
-        return new Rectangle(x, y, width, 5.f);
+        return new Rectangle(x + 10.f, y, width - 20.f, 5.f);
     }
 
     /**
