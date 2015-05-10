@@ -107,6 +107,11 @@
    <property name="solid" value="true"/>
   </properties>
  </tile>
+ <tile id="131">
+  <properties>
+   <property name="type" value="portal"/>
+  </properties>
+ </tile>
  <tile id="132">
   <properties>
    <property name="solid" value="true"/>
@@ -130,6 +135,7 @@
  <tile id="143">
   <properties>
    <property name="count" value="2"/>
+   <property name="goes_max" value="13"/>
    <property name="max" value="290"/>
    <property name="mode" value="vertical"/>
    <property name="type" value="platform"/>
@@ -148,6 +154,7 @@
  <tile id="155">
   <properties>
    <property name="count" value="2"/>
+   <property name="goes_max" value="15"/>
    <property name="max" value="250"/>
    <property name="mode" value="horizontal"/>
    <property name="type" value="platform"/>

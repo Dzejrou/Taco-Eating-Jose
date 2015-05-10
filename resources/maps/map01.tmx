@@ -108,6 +108,11 @@
     <property name="solid" value="true"/>
    </properties>
   </tile>
+  <tile id="131">
+   <properties>
+    <property name="type" value="portal"/>
+   </properties>
+  </tile>
   <tile id="132">
    <properties>
     <property name="solid" value="true"/>
@@ -162,7 +167,7 @@
  </tileset>
  <layer name="Enemies" width="300" height="50">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAA+3dS26DMBAAUC7TA3TFqiuOwaV6gB62YoFaWTGY2PGHvCdFjgJJvIhHZjwx0wQAAAAAAAAAAAAA7c2JD4DRrUELAAAAAAAAAADAuY/WHQDezqj16+Il3Nf3hXOXl/Wijs/WHQCaOpuHzZHnADWUiDtz0B4dS/m+8Nwl8jrAxr4NAABttFjDs7cNMArxCsrpoW7oaL2/x1qALVe2TGk5M/EKAEiRM+dZgramfV6UOjcCyPHTugNAM7F5xtH8IzwmRwOUtF0DrdP4/8UDYEw9rO8CfRAPAOrqsY4NAPiz1y+NkLt/dl5Raj5S43ry0f4Ue53Zf+tkLZfxpI7FUvHobC+o2PfE9olpWXMKkCO2z17pFqjDGHyNK/vQAwDQp5wcvnoy3tlRzrvV2HgmD28cA4/UyJ2NmJ87W7e9WmMhBkO63JjR+v2jUsvOXXwlnHP2e7+y10yqq+9LPT8nZtWo74qt24Y1ZuF9DYG4kcdJ2Pc73q9wjbQlPxt6drcxDQBQyi8lT3k+YOoAAA==
+   H4sIAAAAAAAAA+3dwW3CMBQA0CzTAXri1FPGyDoM0AE6bMUBtbJw4hDjb4f3JGREAviAv5zvjzNNAAAAAAAAAAAAABDvUvgAGN2StAAAAAAAAAAAAGz7iO4A8HZGrV8XL+G8vnecO7+sF218RncACLU1D7tkngO0UCPuXJJ27VjJ96XnzpnXAW7s2wAAECNiDc/eNsAoxCuop4e6obX1/h5rAW65snkqy5mJVwBAiSNznjlpW7rPi0rnRgBH/ER3AAiTm2eszT/SY3I0QE23a6BlGv+/eACMqYf1XaAP4gFAWz3WsQEAf+71SyPk7p+dV9Saj7S4nny0P8W9zuy/ZbKWy3hKx2KteLS1F1Tue3L7xETWnAIckdtnr3YLtGEMvsaefegBAOjTkRy+ejLe2VrOO2psPJOHN46BR1rkzkbMz22t2+6tsRCDodzRmBH9/lGpZecsvgrO2fq979lrptTe95WefyRmtajvyq3bpjVm6X0No12jOwArehknz0j7fsb7FS6ZtuZnQ8/ONqYBAGr5BaFPPxVg6gAA
   </data>
  </layer>
  <layer name="Background" width="300" height="50" visible="0">

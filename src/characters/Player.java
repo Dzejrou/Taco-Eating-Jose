@@ -647,4 +647,20 @@ public class Player extends Character
             }
         }
     }
+
+    /**
+     * Returns the player's current score.
+     */
+    public int get_score()
+    {
+        return score;
+    }
+
+    /**
+     * Sets the player's current score.
+     */
+    public void set_score(int val)
+    {
+        score = val;
+    }
 }

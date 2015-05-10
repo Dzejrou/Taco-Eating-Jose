@@ -167,7 +167,7 @@ public abstract class Character
      * @return New instance of the class Rectangle that has the same
      *         position and size as the character.
      */
-    protected Rectangle get_bounds()
+    public Rectangle get_bounds()
     {
         return new Rectangle(x + offset_x, y + offset_y, width, height);
     }

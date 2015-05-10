@@ -21,6 +21,7 @@ import Jose.src.characters.Boo;
 import Jose.src.characters.Robot;
 import Jose.src.objects.Coin;
 import Jose.src.objects.Platform;
+import Jose.src.objects.Portal;
 
 /**
  * Main game class, updates and renders the game, selects levels.
@@ -30,7 +31,7 @@ public class JoseMain extends BasicGame
     /**
      * Enum that denotes the game's state.
      */
-    private enum GAME_STATE { RUNNING, END, MENU, DIALOG }
+    private enum GAME_STATE { RUNNING, END, WON }
 
     /**
      * The game's current state.
@@ -88,6 +89,11 @@ public class JoseMain extends BasicGame
      * Indicates if the player can enter the debug mode.
      */
     private final boolean debug_possible = true;
+
+    /**
+     * Portal used to end the level.
+     */
+    private Portal portal;
 
     /**
      * Constructor, sets all necessary attributes.
@@ -161,13 +167,21 @@ public class JoseMain extends BasicGame
         for(Character c : characters)
             c.update(i);
 
-        if(player.is_dead())
+        // End the game if necessary.
+        if(player.is_dead() && curr_state != GAME_STATE.WON)
             curr_state = GAME_STATE.END;
 
         if(curr_state == GAME_STATE.END && cont.getInput().
                 isKeyDown(Input.KEY_ENTER))
         {
             curr_state = GAME_STATE.RUNNING;
+            init_level(cont, current_level); // Reload the level.
+        } else if(curr_state == GAME_STATE.WON && cont.getInput().
+                isKeyDown(Input.KEY_ENTER))
+        {
+            curr_state = GAME_STATE.RUNNING;
+            current_level = 1;
+            player_score = 0;
             init_level(cont, current_level); // Reload the level.
         }
 
@@ -176,6 +190,8 @@ public class JoseMain extends BasicGame
         while(it.hasNext())
         {
             Character c = it.next();
+
+            // RIP.
             if(c.is_dead())
                 it.remove();
         }
@@ -185,6 +201,13 @@ public class JoseMain extends BasicGame
             Character.debug = false;
         else if(debug_possible && cont.getInput().isKeyDown(Input.KEY_G))
             Character.debug = true;
+
+        // Level finnished?
+        if(portal.get_bounds().intersects(player.get_bounds()))
+        {
+            player_score = player.get_score(); // Preserve the score!
+            next_level();
+        }
     }
 
     @Override
@@ -196,6 +219,7 @@ public class JoseMain extends BasicGame
      */
     public void render(GameContainer cont, Graphics g) throws SlickException
     {
+        Color tmp = g.getColor(); // Color backup for drawing.
         switch(curr_state)
         {
             case RUNNING:
@@ -204,8 +228,18 @@ public class JoseMain extends BasicGame
             case END:
                 render_running(g);
                 g.setColor(Color.black);
+                g.drawString("Score: " + player_score, 350, 300);
                 g.drawString("YOU LOST!", 350, 325);
                 g.drawString("Press enter to restart the level or escape to leave the game.", 150, 350);
+                g.setColor(tmp);
+                break;
+            case WON:
+                render_running(g);
+                g.setColor(Color.black);
+                g.drawString("Score: " + player_score, 340, 300);
+                g.drawString("YOU WON!", 350, 325);
+                g.drawString("Press enter to restart the game or escape to leave the game.", 150, 350);
+                g.setColor(tmp);
                 break;
         }
 
@@ -232,6 +266,9 @@ public class JoseMain extends BasicGame
                    tile_index_x, tile_index_y,
                    (int)((view.width - tile_offset_x) / map.getTileWidth() + 1),
                    (int)((view.height - tile_offset_y) / map.getTileHeight() + 1));
+
+        // Draw the end portal.
+        portal.draw(g);
 
         // Draw individual characters.
         for(Character c : characters)
@@ -263,11 +300,14 @@ public class JoseMain extends BasicGame
         view = new View(map, 0, map.getTileHeight() * map.getHeight()
                 - window_height, window_width, window_height);
         characters = new ArrayList<Character>(); // Reset the enemies!
+        boolean portal_found = false; // Can't check for null on
+                                      // consecutive levels.
 
         int tile_width = map.getTileWidth();
         int tile_height = map.getTileHeight();
         String type;
         for(int i = 0; i < map.getWidth(); ++i)
+        {
             for(int j = 0; j < map.getHeight(); ++j)
             {
                 // Keeping the characters as blocks. (Not visible ingame.)
@@ -286,6 +326,7 @@ public class JoseMain extends BasicGame
                                 get_coins_from_map(map),
                                 get_platforms_from_map(map));
                         characters.add(player);
+                        player.set_score(player_score);
                         break;
                     case "boo":
                         Boo boo = new Boo(map, x, y, view, player);
@@ -298,11 +339,23 @@ public class JoseMain extends BasicGame
                     case "coin":
                         // DO NOTHING...
                         break;
+                    case "portal":
+                        portal = new Portal(x, y, view);
+                        portal_found = true;
+                        break;
                     default:
                         System.out.println("Invalid character type: " + type);
                         System.exit(1);
                 }
             }
+        }
+
+        if(!portal_found)
+        { // Invalid level map...
+            System.out.println("[Error] No portal in the level: "
+                    + level_number);
+            System.exit(1);
+        }
     }
 
     /**
@@ -427,9 +480,10 @@ public class JoseMain extends BasicGame
     public void next_level() throws SlickException
     {
         if(current_level + 1 >= levels_total)
-        { // Don't load and inform.
-            System.out.println("[Error] Trying to load an invalid level: "
-                    + (current_level + 1));
+        { // TODO: Win screen!
+            curr_state = GAME_STATE.WON;
+            player_score = player.get_score();
+            player.die(); // Ha Ha!
             return;
         }
 

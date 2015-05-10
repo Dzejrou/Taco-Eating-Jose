@@ -1,22 +1,183 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" orientation="orthogonal" renderorder="right-down" width="170" height="10" tilewidth="70" tileheight="70" backgroundcolor="#00a694" nextobjectid="13">
- <tileset firstgid="1" source="tiles_spritesheet.tsx"/>
+ <tileset firstgid="1" name="tiles_spritesheet" tilewidth="70" tileheight="70" spacing="2">
+  <image source="../sprites/tiles_spritesheet.png" width="914" height="936"/>
+  <tile id="7">
+   <properties>
+    <property name="lethal" value="true"/>
+   </properties>
+  </tile>
+  <tile id="9">
+   <properties>
+    <property name="solid" value="true"/>
+   </properties>
+  </tile>
+  <tile id="18">
+   <properties>
+    <property name="climbable" value="true"/>
+   </properties>
+  </tile>
+  <tile id="19">
+   <properties>
+    <property name="climbable" value="true"/>
+   </properties>
+  </tile>
+  <tile id="21">
+   <properties>
+    <property name="climbable" value="true"/>
+   </properties>
+  </tile>
+  <tile id="31">
+   <properties>
+    <property name="climbable" value="true"/>
+   </properties>
+  </tile>
+  <tile id="35">
+   <properties>
+    <property name="solid" value="true"/>
+   </properties>
+  </tile>
+  <tile id="36">
+   <properties>
+    <property name="type" value="boo"/>
+   </properties>
+  </tile>
+  <tile id="43">
+   <properties>
+    <property name="lethal" value="true"/>
+   </properties>
+  </tile>
+  <tile id="48">
+   <properties>
+    <property name="type" value="robot"/>
+   </properties>
+  </tile>
+  <tile id="54">
+   <properties>
+    <property name="color" value="yellow"/>
+    <property name="type" value="coin"/>
+    <property name="value" value="1"/>
+   </properties>
+  </tile>
+  <tile id="55">
+   <properties>
+    <property name="solid" value="true"/>
+   </properties>
+  </tile>
+  <tile id="60">
+   <properties>
+    <property name="type" value="player"/>
+   </properties>
+  </tile>
+  <tile id="66">
+   <properties>
+    <property name="color" value="red"/>
+    <property name="type" value="coin"/>
+    <property name="value" value="5"/>
+   </properties>
+  </tile>
+  <tile id="90">
+   <properties>
+    <property name="color" value="blue"/>
+    <property name="type" value="coin"/>
+    <property name="value" value="20"/>
+   </properties>
+  </tile>
+  <tile id="102">
+   <properties>
+    <property name="lethal" value="true"/>
+   </properties>
+  </tile>
+  <tile id="103">
+   <properties>
+    <property name="solid" value="true"/>
+   </properties>
+  </tile>
+  <tile id="104">
+   <properties>
+    <property name="solid" value="true"/>
+   </properties>
+  </tile>
+  <tile id="114">
+   <properties>
+    <property name="solid" value="true"/>
+   </properties>
+  </tile>
+  <tile id="128">
+   <properties>
+    <property name="solid" value="true"/>
+   </properties>
+  </tile>
+  <tile id="131">
+   <properties>
+    <property name="type" value="portal"/>
+   </properties>
+  </tile>
+  <tile id="132">
+   <properties>
+    <property name="solid" value="true"/>
+   </properties>
+  </tile>
+  <tile id="138">
+   <properties>
+    <property name="lethal" value="true"/>
+   </properties>
+  </tile>
+  <tile id="139">
+   <properties>
+    <property name="solid" value="true"/>
+   </properties>
+  </tile>
+  <tile id="141">
+   <properties>
+    <property name="solid" value="true"/>
+   </properties>
+  </tile>
+  <tile id="143">
+   <properties>
+    <property name="count" value="2"/>
+    <property name="goes_max" value="13"/>
+    <property name="max" value="290"/>
+    <property name="mode" value="vertical"/>
+    <property name="type" value="platform"/>
+   </properties>
+  </tile>
+  <tile id="149">
+   <properties>
+    <property name="climbable" value="true"/>
+   </properties>
+  </tile>
+  <tile id="152">
+   <properties>
+    <property name="solid" value="true"/>
+   </properties>
+  </tile>
+  <tile id="155">
+   <properties>
+    <property name="count" value="2"/>
+    <property name="goes_max" value="15"/>
+    <property name="max" value="250"/>
+    <property name="mode" value="horizontal"/>
+    <property name="type" value="platform"/>
+   </properties>
+  </tile>
+ </tileset>
  <tileset firstgid="157" name="bg" tilewidth="70" tileheight="70" spacing="2" margin="2">
   <image source="../sprites/bg.png" width="256" height="256"/>
  </tileset>
- <layer name="Enemies" width="170" height="10" opacity="0">
+ <layer name="Enemies" width="170" height="10" opacity="0.4">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAA+3TsQ0AIAgEQJdxAAdw/7WsrC1UJOauJvAkUAoAAPV1AAh08t6jfmdnjv+GtZasPkvvDH7fb+qvAwAA1w2E/h55kBoAAA==
+   H4sIAAAAAAAAA+3TsQ1AIQgFQJdxAAf42zm4lbXFN4LmribwSKAUAABqdAA4aOe9n/qdP3P8N6y1ZPVZemfw+n7TFx2A6/XoAAAsDfWImNKQGgAA
   </data>
  </layer>
- <layer name="Background" width="170" height="10">
+ <layer name="Background" width="170" height="10" visible="0">
   <data encoding="base64" compression="gzip">
    H4sIAAAAAAAAA+3SQQkAMRDAwJVVs/V6JhZKjnmMgEDuzFxYdpa97uGffEqBTynwKQU+pcCnFPiUAp9S4FMKtj/9AFIakWiQGgAA
   </data>
  </layer>
  <layer name="Foreground" width="170" height="10">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAA+2XQQ7CIBBFuYNu6opVEzfewY0H8BJ6hS5cuGDtzsTb2iY0IRTKTJkZkfCSHxJChyn5+aVGNaQxnijZEdcrBepzaqTh9OmbuF4p1O7T168bCMDt07ujWuD2aezMIOcYenYfWRubr9Wnh1GdHV2wefovfi4lT6EZoL21szRjb9RQ+LRz5MLx3S/By6X4FIoe9QlIR9YPIl3Jk5OnJfgOy5pPe+S8BFrR+hR7l9ty9+u9kZPcPMXcxySRzlPsfk+1/Ma3PI0T86mEty6MtSV9SvWPC/Xp4AjLltxce+Zkx7PC3U+PiP0nMHlKmZ3Te13tyIFRy7zC6maVWydUM6SQTynr5yrVj+/TVK8zW88SysMRlNw9oXwB8De1mZAaAAA=
+   H4sIAAAAAAAAA+2XQQrDIBBFvUO7SVeuAt30DjlNe4UsuujCdXaF3rYpGBiMxhkdpyb44COIGQf5fI1RDWmMI05OzPVqgfucGnFK+vTNXK8Wju7T6d8NeCjt0wfQUSjt09CZYc7R9+05sDY0f1SfXmZ1doRQ83Qvfq4lT7EZoJ21i3TB3rjh8GkHBClx79fg5Vp8ikXP+nikA+tHka7kycnTGnxHZcunPXFeAq14fUp9y6W8/XpnLElunlLeY5JI5yl1v5da3/EtT8OEfLrHDIVI+pTrHxfr0xGISkpubn1zs+OgaO/TK2H/H5Q85czOgbBvCkat84qqu1VuHV9Nn3w+5ayfq1g/rk9jvS6kniWWJxCW3D2xfAFeIFuAkBoAAA==
   </data>
  </layer>
  <layer name="Walk-through" width="170" height="10">
