@@ -72,7 +72,7 @@ public class JoseMain extends BasicGame
      * Total number of levels accessible, increment this number after
      * creating a level.
      */
-    public final int levels_total = 3;
+    public final int levels_total = 4;
 
     /**
      * Reference to the game container.

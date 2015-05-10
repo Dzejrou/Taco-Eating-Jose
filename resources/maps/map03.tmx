@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="100" height="40" tilewidth="70" tileheight="70" nextobjectid="1">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="230" height="9" tilewidth="70" tileheight="70" nextobjectid="1">
  <tileset firstgid="1" name="tiles_spritesheet" tilewidth="70" tileheight="70" spacing="2">
   <image source="../sprites/tiles_spritesheet.png" width="914" height="936"/>
   <tile id="7">
@@ -162,9 +162,27 @@
    </properties>
   </tile>
  </tileset>
- <layer name="Tile Layer 1" width="100" height="40">
+ <tileset firstgid="157" name="bg" tilewidth="70" tileheight="70" spacing="2" margin="2">
+  <image source="../sprites/bg.png" width="256" height="256"/>
+ </tileset>
+ <layer name="Enemies" width="230" height="9">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAA+3BAQEAAACAkP6v7ggKAAAAAAAAAAAAAAAAAAAAao3nfFeAPgAA
+   H4sIAAAAAAAAA+2VwQ3DMAhFvUwG6MmnnjJG1+ngPbSREsQ3H8dqU+s/KUqMwRgMTilCCCGEECJL/fUGxOXxaqQCOdLv8YP8MvZn6zrrewSL8cPGOhszxtaqzaVwoLzYuvF0mZrq8V/Lcf/snbAfW/ueNUbB9j2Tazv2bGz+GLL6DOg8vHmL1X98Hlb/DHdHlukTz9aeU2vcA+rFaN+RXjTHzEesQN57pjdHts8P6rPojmDj9OKxstHn78WMfKE5ZIviX8G3ONJztt/MZ6YGsmtG7zMwa4zore2/w9zjzDtDZNO6V5Bs/x99pneU8xXJr0w1z7/D1ucMsW5cPWZbXzPlXgjx5gV2vu8kWCAAAA==
+  </data>
+ </layer>
+ <layer name="Background" width="230" height="9" visible="0">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAA+3DAQ0AAAzDoPq3MLM3cAmQsGqqqqqqqqqqqs8DJUp2e1ggAAA=
+  </data>
+ </layer>
+ <layer name="Foreground" width="230" height="9">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAA+2YwQ6DIAyGOfIMnpc9g9c93E5b9sxbD00aUihgAWf+L/ljhFJasaLuIYQdgiAIgqCingEAMBqutxwxOaIuARiP3As1UJcAzCd9T7VAXc7n/dNndRAKZ43rCmjfkExMbOmc63IT7VvQ2Yx+Qlvb1F4bX/KZ81trK33fD87hZdOK9GldK0bm6hFTrQ9vO6I2Z+LoGrfYMVZ8uf87TBQiPPbL0ffhqLmtsV4x9PTP2LtKc6yowdRm1rPEO9eH0lb696pB7beMXkJWf06avXXurZ64z6zcevWu0T+oJecVebfGZ+kLCnme9lggAAA=
+  </data>
+ </layer>
+ <layer name="Walkthrough" width="230" height="9">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAA+3BgQAAAADDoPlTX+AIVQEAAAAAAAAAfAN+nOcQWCAAAA==
   </data>
  </layer>
 </map>

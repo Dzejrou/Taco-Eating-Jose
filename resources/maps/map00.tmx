@@ -177,7 +177,7 @@
  </layer>
  <layer name="Foreground" width="170" height="10">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAA+2XQQrDIBBFvUO7SVeuAt30DjlNe4UsuujCdXaF3rYpGBiMxhkdpyb44COIGQf5fI1RDWmMI05OzPVqgfucGnFK+vTNXK8Wju7T6d8NeCjt0wfQUSjt09CZYc7R9+05sDY0f1SfXmZ1doRQ83Qvfq4lT7EZoJ21i3TB3rjh8GkHBClx79fg5Vp8ikXP+nikA+tHka7kycnTGnxHZcunPXFeAq14fUp9y6W8/XpnLElunlLeY5JI5yl1v5da3/EtT8OEfLrHDIVI+pTrHxfr0xGISkpubn1zs+OgaO/TK2H/H5Q85czOgbBvCkat84qqu1VuHV9Nn3w+5ayfq1g/rk9jvS6kniWWJxCW3D2xfAFeIFuAkBoAAA==
+   H4sIAAAAAAAAA+2XQQrDIBBFxSu0m3TlKtBN75DTtJfooguvEOhtm4KBwWic0dFM2jz4CGJmRD5fY9VBa6wnTk7M9aTAfU4HaWr6dGSuJ4XDp+2p7dMH0K9Q26exM8OcY+jbc2RtbF4iHD69TOrcCKHm6V78LCVPsRlgvLWzTMW9ccPh0w4IUuPel+BlKT7FYia9AzLbbWkTSvJUgu+orPm0J863wCicTzWyHvUtl/P2672xJqV5SnmPtaR1nlL7vdTyjk/5VAP9GzGf7jFDIS19yvWPu+ZTHVAOObm59s3NjYOivU+vhP5fKHnKmZ0DoW8OVi3ziqq7U2mdUM2QQj7lrF+q1H58n6b2OpN7llieQFhKe2L5APr1XVKQGgAA
   </data>
  </layer>
  <layer name="Walk-through" width="170" height="10">
