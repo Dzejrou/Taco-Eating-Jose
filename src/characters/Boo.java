@@ -56,7 +56,6 @@ public class Boo extends Character
      * @param pos_x X axis starting coordinate.
      * @param pos_y Y axis starting coordinate.
      * @param v Reference to the game's view.
-     * @param debug Reference to the debug variable.
      * @param p Reference to the player.
      */
     public Boo(TiledMap m, float pos_x, float pos_y, View v, Player p)

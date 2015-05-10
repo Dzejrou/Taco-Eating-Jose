@@ -164,10 +164,15 @@
  </tileset>
  <tileset firstgid="157" name="bg" tilewidth="70" tileheight="70" spacing="2" margin="2">
   <image source="../sprites/bg.png" width="256" height="256"/>
+  <tile id="0">
+   <properties>
+    <property name="solid" value="true"/>
+   </properties>
+  </tile>
  </tileset>
  <layer name="Enemies" width="150" height="50">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAA+3OQREAAAQAMMW0E1wCX+7clmARAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADAJK8DvFDXAQBY1GG0eLQwdQAA
+   H4sIAAAAAAAAA+3SwQmAMAwF0CzmqWN0HcdwWK8SqoeKBsp7EEJLDv/wIwAAAAAAAAAAAAAAAADeOaoDAAA86Gm39IYZuVf5H2b0y8Rgwwx94gt3vWqDWwAAAAAAAAAAgFVs1QFYwl4dAAB+dAI8rx8QMHUAAA==
   </data>
  </layer>
  <layer name="Background" width="150" height="50" visible="0">
@@ -177,7 +182,7 @@
  </layer>
  <layer name="Foreground" width="150" height="50">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAA+3UQQrDIBAFUI8yt0t6jBwjt027kxLGREIr8h78xYCK4MdSAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACYVbyzVol/XoZpRGOGHtGYoUc0ZugRjRnuWpMwl63k7/3Jq+PMsz17EsZVd+RuF35Br+bzdOe+/7krZ+rVGJYk9Ztm60aKXo3hABwgOfEwdQAA
+   H4sIAAAAAAAAA+3aW07DMBCF4dkDLOBsgjUBy2ATSHlgrxDJFaY4di6T+pL/k0aKpdaeukd5cGIGAAAAAAAAAAAAAAAAAAAAAACAFjyHan1O9EWh3hwrNecRHwvroF0K1fqc6IuMXMGfjFzBn4xcwZ+MXMGfjFzBn4xcwZ9CvYRKic8515x53uZEX5bOCd9/6mtjbT3njK9LBeTIfu8/8TVwhIxcwZ+MXMGfjFzBn2zMXE21G7g42Xi5mqJCHbLxcjV7qt3AxcnGzNVn7QYuTvb/nHQE5KouFca9mnPFc4J6VBj3as7VlCg8hgrjXpGrulQY94pc1TPy+wrk6q+l92Tu35nZOmfqO6l9j/c/7mXrmjdnZjTX38i58vhfzlTKVcpSRkuO7MXeNUfNVY535u7vc2vm3JOrtetuuU/t6X2NXnL1mql4X3Kfa6lyuard21m/r0Xf4zfDfjB1AAA=
   </data>
  </layer>
  <layer name="Walkthrough" width="150" height="50">

@@ -3,18 +3,41 @@
         TODO: Description of the project.
     </description>
 
-    <target name="clean">
+    <target name="clean" description="delete build files">
         <delete dir="build" />
     </target>
 
-    <target name="compile">
+    <target name="compile" description="compile the game">
         <mkdir dir="build/Jose" />
         <javac srcdir="src" destdir="build" classpath="lib/slick.jar:lib/lwjgl.jar:src" fork="true" includeantruntime="false" />
     </target>
 
-    <target name="run">
+    <target name="run" description="run the game">
         <java classname="Jose.src.JoseMain" classpath="lib/slick.jar:lib/lwjgl.jar:build" fork="true">
             <sysproperty key="java.library.path" path="natives" />
         </java>
+    </target>
+
+    <target name="doc" description="generate the docs">
+        <mkdir dir="docs" />
+        <javadoc sourcepath="." destdir="docs" access="private">
+            <fileset dir="src">
+                <include name="*.java" />
+            </fileset>
+            <fileset dir="src/characters">
+                <include name="*.java" />
+            </fileset>
+            <fileset dir="src/objects">
+                <include name="*.java" />
+            </fileset>
+            <fileset dir="src/util">
+                <include name="*.java" />
+            </fileset>
+            <classpath>
+                <fileset dir="lib">
+                    <include name="slick.jar" />
+                </fileset>
+            </classpath>
+        </javadoc>
     </target>
 </project>

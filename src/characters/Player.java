@@ -89,6 +89,11 @@ public class Player extends Character
     private int score;
 
     /**
+     * Indicates if the fall is from a jump, this prevents view stuttering.
+     */
+    private boolean fall_from_jump;
+
+    /**
      * Constructor, sets all necessary attributes of the player and creates
      * animations.
      * @param m Reference to the level's map.
@@ -111,6 +116,7 @@ public class Player extends Character
         curr_dir = DIRECTION.NONE;
         score = 0;
         coins = c;
+        fall_from_jump = false;
 
         // Load all images into animation arrays.
         try
@@ -192,10 +198,13 @@ public class Player extends Character
         }
 
         // Move the view up/down if necessary.
-        if(y <= view.y)
-            view.move_vertically(-1);
-        else if(y >= view.y + view.height)
-            view.move_vertically(1);
+        if(curr_state != STATE.JUMPING && !fall_from_jump)
+        {
+            if(y <= view.y)
+                view.move_vertically(-1);
+            else if(y >= view.y + view.height)
+                view.move_vertically(1);
+        }
 
         // Collect coins!
         update_coins();
@@ -434,6 +443,7 @@ public class Player extends Character
         curr_state = STATE.JUMPING;
         speed_y = default_jump_speed;
         jump_distance = 0f; // Just to be sure.
+        fall_from_jump = true; // So the view doesn't follow the player.
     }
 
     /**
@@ -447,6 +457,7 @@ public class Player extends Character
         curr_dir = DIRECTION.NONE;
         curr_anim = anim_stand;
         curr_state = STATE.STANDING;
+        fall_from_jump = false;
     }
 
     /**

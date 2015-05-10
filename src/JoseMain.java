@@ -141,13 +141,13 @@ public class JoseMain extends BasicGame
         }
     }
 
-    @Override
     /**
      * Initializes the game object by calling init_level on the
      * starting level.
      * @param cont The game container.
      * @throws SlickException When error occurs during level load.
      */
+    @Override
     public void init(GameContainer cont) throws SlickException
     {
         game_container = cont;
@@ -157,7 +157,6 @@ public class JoseMain extends BasicGame
         init_level(cont, current_level);
     }
 
-    @Override
     /**
      * Updates the game on each frame.
      * @param cont The game container.
@@ -165,6 +164,7 @@ public class JoseMain extends BasicGame
      * @throws SlickException When error occurs during GameContainer
      *                        manipulation.
      */
+    @Override
     public void update(GameContainer cont, int i) throws SlickException
     {
         // Escape key - TODO: Implement menu.
@@ -239,13 +239,13 @@ public class JoseMain extends BasicGame
         }
     }
 
-    @Override
     /**
      * Renders all of the game's tiles, characters and objects.
      * @param cont The game container.
      * @param g The game's graphics context.
      * @throws SlickException When error occurs during graphis drawing.
      */
+    @Override
     public void render(GameContainer cont, Graphics g) throws SlickException
     {
         Color tmp = g.getColor(); // Color backup for drawing.
