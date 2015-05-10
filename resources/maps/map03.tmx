@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="150" height="50" tilewidth="70" tileheight="70" nextobjectid="1">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="100" height="40" tilewidth="70" tileheight="70" nextobjectid="1">
  <tileset firstgid="1" name="tiles_spritesheet" tilewidth="70" tileheight="70" spacing="2">
   <image source="../sprites/tiles_spritesheet.png" width="914" height="936"/>
   <tile id="7">
@@ -162,32 +162,9 @@
    </properties>
   </tile>
  </tileset>
- <tileset firstgid="157" name="bg" tilewidth="70" tileheight="70" spacing="2" margin="2">
-  <image source="../sprites/bg.png" width="256" height="256"/>
-  <tile id="0">
-   <properties>
-    <property name="solid" value="true"/>
-   </properties>
-  </tile>
- </tileset>
- <layer name="Enemies" width="150" height="50">
+ <layer name="Tile Layer 1" width="100" height="40">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAA+3c223DIBSAYZbpAH3iqU+M4XU6QAfosFXVREGUw/3YBv5PQo6TlBpzChjsGgMAAAAAAAAAAAAAAAAAAADoerv499tH8knH5Bryv7p86PP+2FoTj5Xwe1iTNfkYuAOpjUq1XVbY4n6s8Pq5H4vPXNym8mwlxRSxhe+rDwAAACTtPn9xBFsX7J9tl/pYvZxhXIXv46U2Fna+xjy8ZCLbEVaZ6+yNk53iTCOenGlbUwndqR5ix1L6nmTlPkGKqxFxEZLmOXvrB5jNqLYXwFxq+kEgZ5a5mq+K7zoh4RqxexoA6PPnE9Fvlv6yVcn8sBNe/1r9/OC/VH9eet9tbHwmjdk+Sw5qQ6uNq1rLUxJzM9wPfrVVx+3SmgHxgB7ETr2e8aL0s7l6mG2MuktcldTLyLprjZ+UlnlG7X5Ho5yr03j2yY8NrWesnnXdsjY06m9rhbiqKUPJs3n+fqrOzzh3qfam5FnTXN4tn5e0m7PHlX/8H4nPtMqZux4+S20fmWsbw3NXWxaNsh8FaZSeeZLePHL5nmWX63dpbVtrnXv184k/4f/IiCXgLn4AoSdalzB1AAA=
-  </data>
- </layer>
- <layer name="Background" width="150" height="50" visible="0">
-  <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAA+3DQQ0AAAwDofPvoV5nYk9IWDVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV1YcHKDB4izB1AAA=
-  </data>
- </layer>
- <layer name="Foreground" width="150" height="50">
-  <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAA+3bTU7DMBCG4VmyhwPMlgNwAE4DHCNr9khd9K5gKagmxGMnseOfvo80UlI1iet+LWXqigAAAAAAAAAAAAAAAAAAAAAAcJ8uP/VcexAYjsvVe6A+Isc+zZVTiXOifZPccqdzhXK5p9bOmWu8W14zqEfnav2c6IsKuUJ+KuQK+amQK+SnQq6Qnwq5Qn4q5GrN0d7I0iVQo9K5XuZa4/c5U3qev+dsybIHttb7CmVp8rZz9sxay5XVJ7xurK19Tn87VjVs/T6r1jid1nJ1NpXb+4+/3SL/Ndd6P55c9ZOrnpCr8XNV4+8huRojVy19DnTI1Ri5au1/fXJFrkqN556pjJGrpcfK1ydXY+bq66TrvAZuJ1f/+6QjiOXqSO83pc9Mruz9XrlcWc9/6POYX5+Bso5RIVeORvZ75XKVkh2rHgJFruI0st8rclWXRvZ7lSNXe0qFXLW2XiEncvVXaJ3Mkd/WTYFjrPlZjmXv+oGSGbXGVyJXKVTK56r1dR175jCU0Zgjc7H3mqPmypI7cylrJpeOzqF13S3vU3vGnqKXXL0Z5c+Ldb+WyprD2mMr/fjOqFTfJGrphDB1AAA=
-  </data>
- </layer>
- <layer name="Walkthrough" width="150" height="50" opacity="0.5">
-  <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAA+3UMQoAIQxFQUuPulfyttsIK8EmsIEUM/ARsX04BgAAAAAAAAAAAAAAAAAAAAAA0NWzBwAAAAAA9LD24E+6ooKuqKArKuiKCroia46vm3lshTddkRG7up26Iiv+T7e7rujiBTqnLqMwdQAA
+   H4sIAAAAAAAAA+3BAQEAAACAkP6v7ggKAAAAAAAAAAAAAAAAAAAAao3nfFeAPgAA
   </data>
  </layer>
 </map>

@@ -194,6 +194,8 @@ public class JoseMain extends BasicGame
         }
 
         // Check for dead characters.
+        if(player.is_dead())
+            player_score = player.get_score(); // Save score before deleting.
         Iterator<Character> it = characters.iterator();
         while(it.hasNext())
         {
