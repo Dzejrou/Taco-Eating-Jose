@@ -110,7 +110,7 @@ public class JoseMain extends BasicGame
      * Without this set, the "turn debug on" key (G) will be ignored
      * and as a result of this, every other debug key will.
      */
-    private final boolean debug_possible = true;
+    private final boolean debug_possible = false;
 
     /**
      * Portal used to end the level.

@@ -45,7 +45,7 @@
         </javadoc>
     </target>
 
-    <target name="version">
+    <target name="version" description="print the required java version">
         <echo>Required Java version: 1.8</echo>
     </target>
 </project>
