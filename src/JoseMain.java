@@ -110,7 +110,7 @@ public class JoseMain extends BasicGame
      * Without this set, the "turn debug on" key (G) will be ignored
      * and as a result of this, every other debug key will.
      */
-    private final boolean debug_possible = false;
+    private final boolean debug_possible = true;
 
     /**
      * Portal used to end the level.
@@ -284,6 +284,13 @@ public class JoseMain extends BasicGame
                 break;
             case END:
                 render_running(g);
+                // Draw background:
+                g.setColor(Color.black);
+                g.fillRect(130, 280, 580, 100);
+                g.setColor(Color.white);
+                g.fillRect(140, 290, 560, 80);
+                
+                // Draw the text.
                 g.setColor(Color.black);
                 g.drawString("Score: " + player_score, 350, 300);
                 g.drawString("YOU LOST!", 350, 325);
@@ -291,9 +298,16 @@ public class JoseMain extends BasicGame
                 break;
             case WON:
                 render_running(g);
+                // Draw background:
                 g.setColor(Color.black);
-                g.drawString("Score: " + player_score, 340, 300);
-                g.drawString("YOU WON!", 350, 325);
+                g.fillRect(130, 280, 580, 100);
+                g.setColor(Color.white);
+                g.fillRect(140, 290, 560, 80);
+                
+                // Draw the text.
+                g.setColor(Color.black);
+                g.drawString("Score: " + player_score, 360, 300);
+                g.drawString("YOU WON!", 370, 325);
                 g.drawString("Press enter to restart the game or escape to leave the game.", 150, 350);
                 break;
         }
