@@ -12,6 +12,10 @@ import Jose.src.characters.Character;
 /**
  * Class representing a movable platform that can carry the
  * player on itself.
+ * Note: In horizontal mode, the platform is supposed to be placed
+ *       on the left end of its path, as it starts its movement
+ *       to the right, and in the vertical mode on the bottom end
+ *       of its path, as it starts its movement updwards.
  * @author Dzejrou
  */
 public class Platform
@@ -28,6 +32,8 @@ public class Platform
 
     /**
      * Number of blocks that the platform consists of.
+     * Used for rendering (render block_count blocks next
+     * to each other) and collisions.
      */
     protected int block_count;
 
@@ -48,11 +54,14 @@ public class Platform
 
     /**
      * Keeps track of the number of steps this platform has taken.
+     * Incremented on every update.
      */
     protected int step_count;
 
     /**
-     * Maximum amount of steps before this platform dissapears.
+     * Maximum amount of steps before this platform changes its
+     * movement direction.
+     * This makes the platform patrol between two points in the map.
      */
     protected int max_step_count;
 
@@ -115,12 +124,15 @@ public class Platform
      */
     public void draw(Graphics g)
     {
+        // Draw the individual blocks, they are always in a horizontal
+        // line.
         for(int i = 0; i < block_count; i++)
         {
             block.draw(start_x + i * block_width - view.x,
                     start_y - view.y);
         }
 
+        // Draw the hitboxes in debug mode.
         if(Character.debug)
         {
             // Adjust the hitboxes to the view.
@@ -143,10 +155,11 @@ public class Platform
 
     /**
      * Updates the platform (movement).
+     * The platform is updated even when out of the view,
+     * since it could leave the view and never return otherwise.
      */
     public void update()
-    { // Updated even if out of view, so that it can simulate the
-      // movement.
+    {
         step_count++;
         if(step_count >= max_step_count)
         { // Turn back.
@@ -163,6 +176,8 @@ public class Platform
 
     /**
      * Returns the collision hitbox of this platform.
+     * This will make the player not fall off.
+     * @return Collision hitbox (bottom one).
      */
     public Rectangle get_bounds()
     {
@@ -173,6 +188,8 @@ public class Platform
     /**
      * Returns a rectangle which when stood on carries the player with the
      * platform.
+     * This will make the player move with the platform.
+     * @return Carry hitbox (top one).
      */
     public Rectangle get_carry_bounds()
     {
@@ -182,6 +199,7 @@ public class Platform
 
     /**
      * Returns the horizontal speed, used to carry the player.
+     * @return Horizontal speed.
      */
     public float speed_x()
     {
@@ -190,6 +208,7 @@ public class Platform
 
     /**
      * Returns the vertical speed, used to carry the player.
+     * @return Vertical speed.
      */
     public float speed_y()
     {

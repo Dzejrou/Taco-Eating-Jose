@@ -84,12 +84,16 @@ public class Player extends Character
     private List<Coin> coins;
 
     /**
-     * Stores the score of the players.
+     * Stores the score of the player.
      */
     private int score;
 
     /**
      * Indicates if the fall is from a jump, this prevents view stuttering.
+     * TODO: Implement fall distance, so that when jumping of the ledge,
+     *       the view follows, because, although not frequently, sometimes
+     *       this will make the view follow the player when he lands, not
+     *       when he jumps off.
      */
     private boolean fall_from_jump;
 
@@ -314,7 +318,8 @@ public class Player extends Character
         switch(curr_state)
         {
             case STANDING:
-                // TODO: Moving platforms?
+                // Only movement is done by moving platforms and that
+                // is handled in the main update method.
                 break;
             case MOVING:
                 mov_x += speed_x * delta * modifier;
@@ -348,6 +353,9 @@ public class Player extends Character
      * left means decreasing the X axis and similarly for the Y axis changes,
      * this method calculated the sign of the position difference variable for
      * the update_movement method.
+     * @return -1 if the player moves to the left, 1 if he moves to the right
+     *         and 0 if he's not moving at all, anulling the entire movement
+     *         formula.
      */
     private float get_direction_modifier()
     {
@@ -566,10 +574,11 @@ public class Player extends Character
     }
 
     /**
-     * Returns true if the player looks at a given point in the map,
-     * returns false otherwisei (horizontal check only).
-     *
+     * Checks if the player is looking at a point in the map
+     * (horizontal check only).
      * @param pos_x X axis coordinate of the target point.
+     * @return True if the player looks at the given point,
+     *         false otherwise.
      */
     public boolean looks_at(float pos_x)
     {
@@ -585,6 +594,7 @@ public class Player extends Character
 
     /**
      * Returns the player's X axis coordinate.
+     * @return X axis coordinate.
      */
     public float get_x()
     {
@@ -593,6 +603,7 @@ public class Player extends Character
 
     /**
      * Returns the player's Y axis coordinate.
+     * @return Y axis coordinate.
      */
     public float get_y()
     {
@@ -600,7 +611,8 @@ public class Player extends Character
     }
 
     /**
-     * Returns true if the player is dead, false otherwise.
+     * Checks if the player is dead.
+     * @return True if the player is dead, false otherwise.
      */
     @Override
     public boolean is_dead()
@@ -618,21 +630,7 @@ public class Player extends Character
         if(!Character.debug)
             curr_state = STATE.DEAD;
     }
-
-    /**
-     * Returns true if the player can climb a ladder
-     * at the player's current position, false otherwise.
-     */
-    private boolean can_climb()
-    {
-        for(Rectangle r : climbable_tiles)
-        {
-            if(r.intersects(get_bounds()))
-                return true;
-        }
-        return false;
-    }
-
+    
     /**
      * Checks if the player has collected a coin and if so,
      * destroys it and adds it's value to the player's score.
@@ -654,6 +652,7 @@ public class Player extends Character
 
     /**
      * Returns the player's current score.
+     * @return Score of the player.
      */
     public int get_score()
     {
@@ -662,6 +661,7 @@ public class Player extends Character
 
     /**
      * Sets the player's current score.
+     * @param val New value of the score.
      */
     public void set_score(int val)
     {

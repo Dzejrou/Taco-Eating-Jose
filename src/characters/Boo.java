@@ -153,6 +153,8 @@ public class Boo extends Character
 
     /**
      * Changes the direction of the boo and his sprite.
+     * This will make the boo stare at the player even when
+     * it is inactive.
      */
     private void change_direction()
     {
@@ -194,6 +196,7 @@ public class Boo extends Character
 
     /**
      * Changes the state to active.
+     * Also changes the sprite.
      */
     private void activate()
     {
@@ -207,6 +210,7 @@ public class Boo extends Character
 
     /**
      * Changes the state to inactive.
+     * Also changes the sprite.
      */
     private void deactivate()
     {
@@ -221,6 +225,7 @@ public class Boo extends Character
     /**
      * Returns the main hitbox which kills the player upon
      * contact.
+     * @return Hitbox rectangle.
      */
     private Rectangle main_hitbox()
     {
@@ -230,6 +235,11 @@ public class Boo extends Character
     /**
      * Returns the secondary hitbox that kills the boo upon
      * contact with the player.
+     * The constants on x axis and width are used so that the
+     * weak hitbox is in the middle and is less wide than the
+     * main hitbox rectangle, so the player cannot kill the boo
+     * while jumping upwards (will hit the main hitbox first).
+     * @return Weak spot rectangle.
      */
     private Rectangle weak_hitbox()
     {
@@ -260,8 +270,8 @@ public class Boo extends Character
     }
 
     /**
-     * Used to check if this character died, returns true if it did and
-     * false otherwise.
+     * Used to check if this character died.
+     * @return True if the boo died, false otherwise.
      */
     public boolean is_dead()
     {

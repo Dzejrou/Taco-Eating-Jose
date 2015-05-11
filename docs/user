@@ -1,0 +1,77 @@
+Taco Eating Jose
+By: Jaroslav Jindrak (@Dzejrou) 2015
+====================================
+
+About:
+======
+    TEJ is a 2D platformer written in java. It's goal is to navigate it's
+    levels filled with enemies, platforms and coins until you reach
+    the end-game portal, which will take you into the next level.
+
+Installing & playing the game:
+==============================
+    Game installation is done by compiling the Java source codes.
+    This can be done by the command "ant compile" (without quotes).
+    After the compilation, you can start the game with the command
+    "ant run" (again, without quotes) and view the version of java
+    required to run with the command "ant version" (... :))
+
+Controls:
+=========
+    W     - up (when standing on a ladder)
+    A     - left
+    D     - right
+    SPACE - jump
+
+Jumping:
+========
+    When you jump, the strength of the jump is determined by how long
+    do you hold the jump key (up to a certain maximum value). After the jump
+    ends, you start falling to the ground, but you can still (altough a bit
+    stiffer) maveuvre you character mid-air.
+
+Score:
+======
+    You earn score by collecting coins (yellow +1, red +5 and blue +20).
+    Your score is preserved when you advance to the next level, but reset
+    to the value you had upon completition of the last level when you die.
+    (Since on the first level you hadn't beaten any level yet, it gets reset
+    to 0.) The goal of the game is ofcourse (besides completing it) to
+    get the highest possible amount of score you can.
+    Note that there are few hidden areas thant contain a bigger amount of coins.
+
+Enemy - Boo:
+============
+    Boo was designing as an enemy bringing a bit of a strategic aspect into
+    the game, inspired by the Super Mario World's Boo character, this Boo
+    only moves when you are moving FROM it. It being a bit faster than you
+    means in the combination with the numerous small platforms that you have
+    to properly plan your movement to bring him down next to you and jump
+    on his head (contact with any other part of his body will kill you).
+
+Enemy - Robot:
+==============
+    The second enemy of this game, the Robot, will be spawned on the ground
+    walking between two points (forming a horizontal line). When you come
+    close to him, he starts to charge at you, increasing his speed and slowing
+    his ability to turn to the other direction.
+    Again, the Robot can be killed by jumping on his head (other body parts
+    will kill you before you can kill him).
+
+End-game portal:
+================
+    The end-game portal is represented by a pink two tiles high and one tile
+    wide rectangle, which, upon contact with your character, ends the current
+    level and either loads the next one or finnishes the game.
+
+Note to fellow players-programmers:
+===================================
+    If you would like to create an executable jar for this game, you must remember
+    to include the libraries slick.jar and lwjgl.jar as well as the natives for
+    the platform you want to target (or all). This can be done manually, or with
+    the program JarSplice found at http://ninjacave.com/jarsplice, this program
+    can also create .exe files. (.exe UNTESTED by me)
+
+Hint:
+=====
+When in doubt, go right.

@@ -1,0 +1,59 @@
+<head>
+Taco Eating Jose
+</head>
+<body>
+    Semestral project for the course NPRG013 Programming in Java
+    by Jaroslav Jindrak (@Dzejrou). <br>
+    <p>
+    Taco Eating Jose is a 2D platformer game written in Java using the
+    Slick2D (slick.ninjacave.com) library (rendering and base game support).
+    In the game, the player tries to navigate 3 (number to change) levels
+    filled with platforms, coins and enemies until he reaches the end-game
+    portal.
+    </p>
+
+    <p>
+    <b>Game loop: </b> <br>
+    When the game is started, the JoseMain class' main static method is called,
+    which creates an instance of the JoseMain class and calls it's constructor
+    (which then calls the parent parent constructor) and then it's run method.
+    The run method first calls the init method, which loads the first level.
+    Next, the game loop is started. In this loop, the methods update and render
+    are called until the program ends. Update updates all characters and objects
+    (by calling their update methods) as well as loads new levels if needed.
+    Render draws characters on the screen, while objects are rendered through
+    the player object (objects are mostly kept in the player class, 
+    so that it can easily manipulate them, since they are then unneeded 
+    in the JoseMain class).
+    </p>
+
+    <p>
+    <b>Collision detection: </b> <br>
+    Collision detection is done with the help of <i>bounding boxes</i>.
+    A bounding box is a rectangle around the character's/tile's sprite
+    and to detect the collision we check if the two bounding boxes intersect
+    (with the help of Rectangle's intersects(Shape other) method)
+    to check intersections between two shapes (inherited from the class Shape).
+    </p>
+
+    <p>
+    <b>Debug mode: </b> <br>
+    In the JoseMain class, you can set the {@link Jose.src.JoseMain#debug_possible debug_possible}
+    variable to true, which will allow you to use the keyboard key G to enter debug mode and the
+    key H to leave the debug mode. While in debug mode, you will se bounding boxes of platforms,
+    enemies, ladders and the player and also some debug info like framerate, view position,
+    player position, player state and direction in the top left corner of the screen.<br>
+    <i>Debug controls: </i>
+    <ul>
+        <li>N - Sets the player's state to debug = no gravity or collisions.</li>
+        <li>M - Sets the player's state to normal (standing).</li>
+        <li>I - Moves the player up.</li>
+        <li>K - Moves the player down.</li>
+        <li>J - Moves the player left.</li>
+        <li>L - Moves the player right.</li>
+        <li>O - Loads the previous level.</li>
+        <li>P - Loads the next level.</li>
+    </ul> <br>
+    Note: You cannot die nor win the level while in debug mode.
+    </p>
+</body>

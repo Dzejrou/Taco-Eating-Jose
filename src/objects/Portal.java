@@ -9,6 +9,7 @@ import Jose.src.util.View;
 /**
  * Class representing a portal that is used to end the level and
  * start the next one (is possible).
+ * @author Dzejrou
  */
 public class Portal
 {
@@ -51,6 +52,8 @@ public class Portal
 
     /**
      * Draws the portal.
+     * Unlike the collision hitbox, the rendered rectangle
+     * will change it's position wrt the game's view.
      * @param g The game's graphics context.
      */
     public void draw(Graphics g)
@@ -66,6 +69,7 @@ public class Portal
     /**
      * Returns a bounding rectangle of this portal used to check for
      * collisions with the player.
+     * @return Hitbox rectangle.
      */
     public Rectangle get_bounds()
     {

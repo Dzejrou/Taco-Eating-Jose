@@ -56,8 +56,9 @@ public class Coin
     }
 
     /**
-     * Returns true if the object is supposed to be destroyed,
-     * false otherwise.
+     * Checks if the coin is marked for destruction.
+     * @return True if the coin is supposed to be destroyed
+     *         (= was taken by the player), false otherwise.
      */
     public boolean is_destroyed()
     {
@@ -66,6 +67,7 @@ public class Coin
 
     /**
      * Marks this object for destruction.
+     * Used when the player collects the coin.
      */
     public void destroy()
     {
@@ -98,6 +100,8 @@ public class Coin
 
     /**
      * Returns the bounding circle of this coin (for collisions).
+     * The coin is collected when the player's hitbox intersects
+     * the one of the coin.
      */
     public Circle get_bounds()
     {

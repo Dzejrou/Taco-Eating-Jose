@@ -1,6 +1,9 @@
 <project name="Taco Eating Jose" default="compile" basedir=".">
     <description>
-        TODO: Description of the project.
+        Semestral project for the NPRG013 Programming in Java course.
+        By Jaroslav Jindrak (@Dzejrou) 2015.
+        GitHub repo: https://github.com/Dzejrou/Taco-Eating-Jose
+        Dependencies: Slick, LWJGL (in the repo in the lib directory), Java
     </description>
 
     <target name="clean" description="delete build files">
@@ -20,7 +23,8 @@
 
     <target name="doc" description="generate the docs">
         <mkdir dir="docs" />
-        <javadoc sourcepath="." destdir="docs" access="private">
+        <mkdir dir="docs/developer" />
+        <javadoc sourcepath="." destdir="docs/developer" access="private" overview="overview.html">
             <fileset dir="src">
                 <include name="*.java" />
             </fileset>
@@ -39,5 +43,9 @@
                 </fileset>
             </classpath>
         </javadoc>
+    </target>
+
+    <target name="version">
+        <echo>Required Java version: 1.8</echo>
     </target>
 </project>

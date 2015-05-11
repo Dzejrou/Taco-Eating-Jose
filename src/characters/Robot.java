@@ -200,8 +200,9 @@ public class Robot extends Character
     }
 
     /**
-     * Returns true if the robot is dead and necessary time has
-     * passed for the body to be deleted.
+     * Checks if the robot is dead.
+     * @return True if the robot is dead AND his body is supposed
+     *         to be deleted.
      */
     @Override
     public boolean is_dead()
@@ -294,6 +295,10 @@ public class Robot extends Character
      */
     private void update_gravity(long delta)
     {
+        // Ignore gravity while walking over a ladder.
+        if(can_climb())
+            return;
+
         if(can_move_to(x, y + speed * delta))
             y += speed * delta;
         curr_anim.update(delta);
@@ -374,6 +379,7 @@ public class Robot extends Character
     /**
      * Returns the sign modifier for movement in a certain
      * direction.
+     * @return -1 if the robot is facing left, 1 otherwise.
      */
     private float get_direction_modifier()
     {
@@ -386,6 +392,7 @@ public class Robot extends Character
     /**
      * Returns the main hitbox which kills the player upon
      * contact.
+     * @return Main hitbox rectangle.
      */
     private Rectangle main_hitbox()
     {
@@ -396,6 +403,7 @@ public class Robot extends Character
     /**
      * Returns the secondary hitbox that kills the robot upon
      * contact with the player.
+     * @return Weak spot rectangle.
      */
     private Rectangle weak_hitbox()
     { // The 10 & 20 modifiers make sure the robot is unkillable by jumping
@@ -404,8 +412,10 @@ public class Robot extends Character
     }
 
     /**
-     * Returns true if the player is close to the robot signaling
-     * that the robot should start charging.
+     * Checks if the player is near the robot.
+     * Used to check if the robot should start charging.
+     * @return True if the player is close to the robot, false
+     *         otherwise.
      */
     private boolean player_near()
     {

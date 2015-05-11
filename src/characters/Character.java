@@ -62,6 +62,9 @@ public abstract class Character
 
     /**
      * Enum that denotes the three possible directions.
+     * Unlike STATE, the direction enum is the same
+     * (with the exception of NONE, which is ignored outside
+     * of player) for all characters.
      */
     protected enum DIRECTION { RIGHT, LEFT, NONE }
 
@@ -77,6 +80,11 @@ public abstract class Character
 
     /**
      * Boolean value that indicates if the debug mode is on.
+     * Used to check if the hitboxes and other info
+     * should be drawn. Can be changed from within the JoseMain
+     * class (kept here for easy access by characters)
+     * if the {@link Jose.src.JoseMain#debug_possible debug_possible variable}
+     * is set to true.
      */
     public static boolean debug;
 
@@ -88,6 +96,8 @@ public abstract class Character
     /**
      * Constructor that spawns a new character on a given coordinates and
      * "binds" them to a level map (collision checking etc).
+     * Also loads all solid, climbable and lethal tiles as arrays
+     * of rectangles used for collisions with them.
      * @param m Reference to the map of the current level.
      * @param pos_x Starting X axis coordinate.
      * @param pos_y Starting Y axis coordinate.
@@ -152,7 +162,8 @@ public abstract class Character
     public abstract void draw(Graphics g);
 
     /**
-     * Returns true if the character is dead, false otherwise.
+     * Checks if the character is dead.
+     * @return True if the character is dead, false otherwise.
      */
     public abstract boolean is_dead();
 
@@ -226,6 +237,9 @@ public abstract class Character
     /**
      * Returns the value of the method is_solid with y coordinate
      * pushed slightly below the character, used for gravity.
+     * Used just for convenience and better code readability.
+     * @return True if the character is standing on solid ground
+     *         (and thus ignores gravity), false otherwise.
      */
     public boolean on_solid_ground()
     {
@@ -237,9 +251,27 @@ public abstract class Character
      * in some places in the code.
      * @param x X axis coordinate.
      * @param y Y axis coordinate.
+     * @return True if the character can move to a given point in the map,
+     *         false otherwise.
      */
     public boolean can_move_to(float x, float y)
     {
         return !is_solid(x, y);
     }
+
+    /**
+     * Checks if the character can climb, i.e is standing on
+     * a climbable tile.
+     * @return True if the character can climb, false otherwise.
+     */
+    protected boolean can_climb()
+    {
+        for(Rectangle r : climbable_tiles)
+        {
+            if(r.intersects(get_bounds()))
+                return true;
+        }
+        return false;
+    }
+
 }

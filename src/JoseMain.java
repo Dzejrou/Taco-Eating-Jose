@@ -25,18 +25,27 @@ import Jose.src.objects.Portal;
 
 /**
  * Main game class, updates and renders the game, selects levels.
+ * Game: (visualisation of the running process)
+ *      Constructor
+ *      Init
+ *      Level Loop:
+ *          Init Level
+ *          Game Loop
+ *              Update
+ *              Render
+ * @author Dzejrou
  */
 public class JoseMain extends BasicGame
 {
     /**
      * Enum that denotes the game's state.
      */
-    private enum GAME_STATE { RUNNING, END, WON }
+    private enum STATE { RUNNING, END, WON }
 
     /**
      * The game's current state.
      */
-    private GAME_STATE curr_state;
+    private STATE curr_state;
 
     /**
      * Reference to the current level's map.
@@ -55,6 +64,8 @@ public class JoseMain extends BasicGame
 
     /**
      * Reference to the player (outside of characters).
+     * Used to check if he's dead (to preserve the score in the
+     * ENDED state).
      */
     private Player player;
 
@@ -65,17 +76,25 @@ public class JoseMain extends BasicGame
 
     /**
      * Current level number (for map choice).
+     * 0 = Test level, used for debug only and can be messed with.
+     * 1 = Starting standard grass level.
+     * 2 = Water platform level.
+     * 3 = Narrow rock tomb with lava.
      */
     public int current_level;
 
     /**
      * Total number of levels accessible, increment this number after
      * creating a level.
+     * This is used to check if the player is not load an invalid level
+     * (negative or non existing positive level number).
      */
     public final int levels_total = 4;
 
     /**
      * Reference to the game container.
+     * Used for misc stuff like getting input where there isn't container
+     * as parameter and making it a parameter wouldn't be that good.
      */
     private GameContainer game_container;
 
@@ -87,8 +106,11 @@ public class JoseMain extends BasicGame
 
     /**
      * Indicates if the player can enter the debug mode.
+     * Set this to false in release version, false otherwise.
+     * Without this set, the "turn debug on" key (G) will be ignored
+     * and as a result of this, every other debug key will.
      */
-    private final boolean debug_possible = true;
+    private final boolean debug_possible = false;
 
     /**
      * Portal used to end the level.
@@ -122,28 +144,30 @@ public class JoseMain extends BasicGame
      */
     public static void main(String[] args)
     {
-        while(true)
+        // No need for a while loop here, the repetition of levels upon
+        // death is done inside the game by reloading the level (wiping
+        // all character etc containers and resetting the score).
+        try
         {
-            try
-            {
-                AppGameContainer game = new AppGameContainer(new ScalableGame(
-                            new JoseMain(), window_width, window_height));
-                game.setDisplayMode(window_width, window_height, false);
-                game.setTargetFrameRate(60);
-                game.setVSync(true);
-                game.setShowFPS(false);
-                game.start();
-            }
-            catch(SlickException ex)
-            {
-                System.out.println(ex.getMessage());
-            }
+            AppGameContainer game = new AppGameContainer(new ScalableGame(
+                        new JoseMain(), window_width, window_height));
+            game.setDisplayMode(window_width, window_height, false);
+            game.setTargetFrameRate(60);
+            game.setVSync(true);
+            game.setShowFPS(false);
+            game.start();
+        }
+        catch(SlickException ex)
+        {
+            System.out.println(ex.getMessage());
         }
     }
 
     /**
      * Initializes the game object by calling init_level on the
      * starting level.
+     * Called only after the game's constructor, things that need to be
+     * done between levels should be in init_level, not in init.
      * @param cont The game container.
      * @throws SlickException When error occurs during level load.
      */
@@ -152,7 +176,7 @@ public class JoseMain extends BasicGame
     {
         game_container = cont;
         player_score = 0;
-        curr_state = GAME_STATE.RUNNING;
+        curr_state = STATE.RUNNING;
         current_level = 1;
         init_level(cont, current_level);
     }
@@ -167,8 +191,11 @@ public class JoseMain extends BasicGame
     @Override
     public void update(GameContainer cont, int i) throws SlickException
     {
+        // Just for better code readability.
+        Input in = cont.getInput();
+
         // Escape key - TODO: Implement menu.
-        if(cont.getInput().isKeyDown(Input.KEY_ESCAPE))
+        if(in.isKeyDown(Input.KEY_ESCAPE))
             System.exit(0);
 
         // Update characters.
@@ -176,18 +203,18 @@ public class JoseMain extends BasicGame
             c.update(i);
 
         // End the game if necessary.
-        if(player.is_dead() && curr_state != GAME_STATE.WON)
-            curr_state = GAME_STATE.END;
+        if(player.is_dead() && curr_state != STATE.WON)
+            curr_state = STATE.END;
 
-        if(curr_state == GAME_STATE.END && cont.getInput().
-                isKeyDown(Input.KEY_ENTER))
+        if(curr_state == STATE.END && in.isKeyDown(Input.KEY_ENTER))
         {
-            curr_state = GAME_STATE.RUNNING;
+            player_score = 0; // So that the score is reseted after
+                              // the player dies.
+            curr_state = STATE.RUNNING;
             init_level(cont, current_level); // Reload the level.
-        } else if(curr_state == GAME_STATE.WON && cont.getInput().
-                isKeyDown(Input.KEY_ENTER))
+        } else if(curr_state == STATE.WON && in.isKeyDown(Input.KEY_ENTER))
         {
-            curr_state = GAME_STATE.RUNNING;
+            curr_state = STATE.RUNNING;
             current_level = 1;
             player_score = 0;
             init_level(cont, current_level); // Reload the level.
@@ -207,9 +234,9 @@ public class JoseMain extends BasicGame
         }
 
         // Turns debug mode ON if possible.
-        if(debug_possible && cont.getInput().isKeyDown(Input.KEY_H))
+        if(debug_possible && in.isKeyDown(Input.KEY_H))
             Character.debug = false;
-        else if(debug_possible && cont.getInput().isKeyDown(Input.KEY_G))
+        else if(debug_possible && in.isKeyDown(Input.KEY_G))
             Character.debug = true;
 
         // Changing levels in debug mode.
@@ -219,14 +246,12 @@ public class JoseMain extends BasicGame
             if(level_change_cooldown < 30)
                 level_change_cooldown++;
 
-            if(level_change_cooldown == 30 &&
-                    cont.getInput().isKeyDown(Input.KEY_O))
+            if(level_change_cooldown == 30 && in.isKeyDown(Input.KEY_O))
             {
                 level_change_cooldown = 0;
                 prev_level();
             }
-            else if(level_change_cooldown == 30 &&
-                    cont.getInput().isKeyDown(Input.KEY_P))
+            else if(level_change_cooldown == 30 && in.isKeyDown(Input.KEY_P))
             {
                 level_change_cooldown = 0;
                 next_level();
@@ -243,6 +268,7 @@ public class JoseMain extends BasicGame
 
     /**
      * Renders all of the game's tiles, characters and objects.
+     * Also renders the LOST/WON text when the level/game has ended.
      * @param cont The game container.
      * @param g The game's graphics context.
      * @throws SlickException When error occurs during graphis drawing.
@@ -262,7 +288,6 @@ public class JoseMain extends BasicGame
                 g.drawString("Score: " + player_score, 350, 300);
                 g.drawString("YOU LOST!", 350, 325);
                 g.drawString("Press enter to restart the level or escape to leave the game.", 150, 350);
-                g.setColor(tmp);
                 break;
             case WON:
                 render_running(g);
@@ -270,18 +295,21 @@ public class JoseMain extends BasicGame
                 g.drawString("Score: " + player_score, 340, 300);
                 g.drawString("YOU WON!", 350, 325);
                 g.drawString("Press enter to restart the game or escape to leave the game.", 150, 350);
-                g.setColor(tmp);
                 break;
         }
+        g.setColor(tmp); // Restore the backed up color.
 
         if(Character.debug)
         {
+            // Easier to draw it manually (can be placed elsewhere etc.) than
+            // to turn the option on on the game container.
             g.drawString("FPS: " + cont.getFPS(), 10, 10);
         }
     }
 
     /**
      * Renders the game while in the running state.
+     * Draws portal, all characters and platforms and coins through the player.
      * @param g The game's gics context.
      */
     private void render_running(Graphics g)
@@ -390,8 +418,13 @@ public class JoseMain extends BasicGame
     }
 
     /**
-     * Returns all the coins in the map in a List.
+     * Checks the current level map's tiles in the layer 0
+     * for the locations, colors and values of all coins.
+     * Uses XML parsing from the class TiledMap.
+     * TODO: Merge the three map parsing functions into one,
+     *       so that only one check is required per tile.
      * @param m Reference to the current level's map.
+     * @return List of all coin object in the current level.
      */
     List<Coin> get_coins_from_map(TiledMap m)
     {
@@ -411,11 +444,13 @@ public class JoseMain extends BasicGame
                 {
                     value = m.getTileProperty(id, "value", "1");
                     try
-                    {
+                    { // Value is separate from color for differently
+                      // valued coins of the same color.
                         val = Integer.parseInt(value);
                     }
                     catch(NumberFormatException ex)
-                    {
+                    { // Any NumberFormatException is indicating an error in
+                      // the tile properties.
                         System.out.println("Error, wrong coin value: " + value
                                 + " at ID #" + id);
                         System.exit(1);
@@ -428,7 +463,7 @@ public class JoseMain extends BasicGame
                     Coin tmp_c;
                     color = m.getTileProperty(id, "color", "nil");
                     switch(color)
-                    {
+                    { // Color distinction between coins.
                         case "yellow":
                             tmp_c = new Coin(pos_x, pos_y, val, view,
                                         Color.yellow);
@@ -448,7 +483,7 @@ public class JoseMain extends BasicGame
                             System.out.println("Invalid coin color: " + color);
                             System.exit(0);
                     }
-                }
+                 }
             
             }
         }
@@ -456,8 +491,13 @@ public class JoseMain extends BasicGame
     }
 
     /**
-     * Returns list of all platforms in a map.
+     * Get's platforms from the 0 layer in the current level's map
+     * and returns them in a List.
+     * Uses XML parsing from the class TiledMap.
+     * TODO: Merge all map parsing functions into one, so that only
+     *       one check per tile is required.
      * @param m The target tile map.
+     * @return List of all movable platforms in the current level.
      */
     private List<Platform> get_platforms_from_map(TiledMap m)
     {
@@ -480,7 +520,7 @@ public class JoseMain extends BasicGame
 
                 // Search by attribute in the map.
                 if("platform".equals(m.getTileProperty(id, "type", "nil")))
-                {
+                 {
                     count_str = m.getTileProperty(id, "count", "0");
                     max_str = m.getTileProperty(id, "max", "0");
                     mode = m.getTileProperty(id, "mode", "horizontal");
@@ -491,6 +531,8 @@ public class JoseMain extends BasicGame
                     }
                     catch(NumberFormatException ex)
                     {
+                        // Any NumberFormatExceptions in this game mean wrong
+                        // properties of map tiles.
                         System.out.println(ex.getMessage());
                         System.exit(1);
                     }
@@ -506,6 +548,7 @@ public class JoseMain extends BasicGame
 
     /**
      * Loads the next level of the game.
+     * Checks if the level number is ok - there is an actual map for it.
      * @throws SlickException When error occurs during level load.
      */
     public void next_level() throws SlickException
@@ -516,7 +559,7 @@ public class JoseMain extends BasicGame
             if(Character.debug)
                 return;
 
-            curr_state = GAME_STATE.WON;
+            curr_state = STATE.WON;
             player_score = player.get_score();
             player.die(); // Ha Ha!
         }
@@ -529,6 +572,7 @@ public class JoseMain extends BasicGame
 
     /**
      * Loads the previous level of the game.
+     * Checks if the level number is ok - there is an actual map for it.
      * @throws SlickException When error occurs during the level load.
      */
     public void prev_level() throws SlickException
